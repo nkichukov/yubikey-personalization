@@ -84,9 +84,12 @@ YK_KEY *yk_open_key(int index)
 	int pids[] = {YUBIKEY_PID, NEO_OTP_PID, NEO_OTP_CCID_PID,
 		NEO_OTP_U2F_PID, NEO_OTP_U2F_CCID_PID, YK4_OTP_PID,
 		YK4_OTP_U2F_PID, YK4_OTP_CCID_PID, YK4_OTP_U2F_CCID_PID,
-		PLUS_U2F_OTP_PID};
+		PLUS_U2F_OTP_PID, 0x0486}; //Added 3rd party PID to list
 
 	YK_KEY *yk = _ykusb_open_device(YUBICO_VID, pids, sizeof(pids) / sizeof(int), index);
+	if (!yk) { //If no Yubikey is found search for compatible 3rd party devices
+		YK_KEY *yk = _ykusb_open_device(0x16C0, pids, sizeof(pids) / sizeof(int), index); 
+	}
 	int rc = yk_errno;
 
 	if (yk) {
