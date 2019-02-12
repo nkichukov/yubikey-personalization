@@ -65,8 +65,8 @@ ykpers4mac:
 	cp COPYING $(PWD)/tmp/root/licenses/libyubikey.txt && \
 	cd .. && \
 	cp ../ykpers-$(VERSION).tar.gz . \
-		|| curl -L -O https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/ykpers-$(VERSION).tar.xz && \
-	tar xfz ykpers-$(VERSION).tar.xz && \
+		|| curl -L -O https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/ykpers-$(VERSION).tar.gz && \
+	tar xfz ykpers-$(VERSION).tar.gz && \
 	cd ykpers-$(VERSION)/ && \
 	CFLAGS=$(CFLAGS) PKG_CONFIG_PATH=$(PWD)/tmp/root/lib/pkgconfig ./configure --prefix=$(PWD)/tmp/root --with-libyubikey-prefix=$(PWD)/tmp/root && \
 	make install $(CHECK) && \
