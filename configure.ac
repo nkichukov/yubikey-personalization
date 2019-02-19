@@ -26,7 +26,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-AC_INIT([yubikey-personalization], [1.19.1],
+AC_INIT([yubikey-personalization], [1.19.3],
   [yubico-devel@googlegroups.com], [ykpers],
   [https://developers.yubico.com/yubikey-personalization/])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -37,7 +37,7 @@ AC_CONFIG_MACRO_DIR([m4])
 # Interfaces added:                             AGE++
 # Interfaces removed:                           AGE=0
 AC_SUBST(LT_CURRENT, 20)
-AC_SUBST(LT_REVISION,1)
+AC_SUBST(LT_REVISION,3)
 AC_SUBST(LT_AGE, 19)
 
 AM_INIT_AUTOMAKE([1.11.3 -Wall -Werror])
@@ -164,6 +164,20 @@ if test -n "$udevrulesdir"; then
     )
     AC_SUBST([udevrulesfile], [$udevrulesfile])
 fi
+
+# Enable more secure memset if available
+AC_CHECK_FUNCS([memset_s explicit_bzero explicit_memset])
+AC_MSG_CHECKING(whether we can use inline asm code)
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],
+  [[
+    int a = 42;
+    int *pnt = &a;
+    __asm__ __volatile__ ("" : : "r"(pnt) : "memory");
+  ]])],
+  [AC_MSG_RESULT(yes)
+     AC_DEFINE([HAVE_INLINE_ASM], [1], [inline asm code can be used])]
+  [AC_MSG_RESULT(no)]
+)
 
 gl_LD_VERSION_SCRIPT
 gl_VALGRIND_TESTS
