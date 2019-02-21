@@ -1,19 +1,19 @@
 # Written by Richard Levitte <richard@levitte.org>.
 # Copyright (c) 2008-2016 Yubico AB
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #     * Redistributions of source code must retain the above copyright
 #       notice, this list of conditions and the following disclaimer.
-# 
+#
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
 #       disclaimer in the documentation and/or other materials provided
 #       with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -78,7 +78,7 @@ if test "x$with_backend" = xcheck; then
    case "$host" in
     *-darwin*) with_backend=osx ;;
     *-mingw*) with_backend=windows ;;
-    *) PKG_CHECK_EXISTS([libusb-1.0], 
+    *) PKG_CHECK_EXISTS([libusb-1.0],
        			   [with_backend=libusb-1.0],
 			   [with_backend=libusb])
   esac
@@ -159,8 +159,8 @@ AC_SUBST([udevrulesdir], [$with_udevrulesdir])
 # 70-yubikey.rules file.
 if test -n "$udevrulesdir"; then
     PKG_CHECK_MODULES([UDEV], [udev >= 188],
-        udevrulesfile=69-yubikey.rules,
-        udevrulesfile=70-yubikey.rules,
+        udevrulesfile=69-onlykey.rules,
+        udevrulesfile=70-onlykey.rules,
     )
     AC_SUBST([udevrulesfile], [$udevrulesfile])
 fi

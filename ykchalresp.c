@@ -38,7 +38,7 @@
 
 #include <yubikey.h>
 #include <ykdef.h>
-#include <ykcore.h>
+#include <okcore.h>
 #include <ykstatus.h>
 #include <ykpers-version.h>
 

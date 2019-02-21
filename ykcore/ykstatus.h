@@ -32,7 +32,7 @@
 #ifndef	__YKSTATUS_H_INCLUDED__
 #define	__YKSTATUS_H_INCLUDED__
 
-#include <ykcore.h>
+#include <okcore.h>
 
 # ifdef __cplusplus
 extern "C" {

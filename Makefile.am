@@ -1,19 +1,19 @@
 # Written by Richard Levitte <richard@levitte.org> et al.
 # Copyright (c) 2008-2014 Yubico AB
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #     * Redistributions of source code must retain the above copyright
 #       notice, this list of conditions and the following disclaimer.
-# 
+#
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
 #       disclaimer in the documentation and/or other materials provided
 #       with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -41,7 +41,7 @@ AM_CFLAGS += $(libjson_CFLAGS)
 
 ykpers_includedir=$(includedir)/ykpers-1
 ykpers_include_HEADERS = ykpers.h ykpers-version.h
-ykpers_include_HEADERS += ykcore/ykstatus.h ykcore/ykcore.h ykcore/ykdef.h
+ykpers_include_HEADERS += ykcore/ykstatus.h ykcore/okcore.h ykcore/ykdef.h
 ykpers_include_HEADERS += ykpbkdf2.h
 
 noinst_LTLIBRARIES = libhmac.la
@@ -110,7 +110,7 @@ EXTRA_DIST += ykpers4win.mk ykpers4mac.mk
 EXTRA_DIST += build-and-test.sh .travis.yml .gitignore
 
 # udev rule files
-EXTRA_DIST += 69-yubikey.rules 70-yubikey.rules
+EXTRA_DIST += 69-onlykey.rules 70-onlykey.rules
 
 # dist the man sources
 EXTRA_DIST += $(MANSOURCES)

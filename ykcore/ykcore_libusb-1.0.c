@@ -33,7 +33,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ykcore.h"
+#include "okcore.h"
 #include "ykdef.h"
 #include "ykcore_backend.h"
 
@@ -116,7 +116,7 @@ int _ykusb_read(void *dev, int report_type, int report_number,
 		int rc2;
 		ykl_errno = libusb_control_transfer((libusb_device_handle *)dev,
 					     LIBUSB_REQUEST_TYPE_CLASS |
-					     LIBUSB_RECIPIENT_INTERFACE | 
+					     LIBUSB_RECIPIENT_INTERFACE |
 					     LIBUSB_ENDPOINT_IN,
 					     HID_GET_REPORT,
 					     report_type << 8 | report_number, 0,

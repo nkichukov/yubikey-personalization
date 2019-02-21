@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ykcore.h"
+#include "okcore.h"
 #include "ykdef.h"
 #include "ykcore_backend.h"
 

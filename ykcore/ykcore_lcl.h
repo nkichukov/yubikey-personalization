@@ -31,7 +31,7 @@
 #ifndef	__YKCORE_LCL_H_INCLUDED__
 #define	__YKCORE_LCL_H_INCLUDED__
 
-/* This is a hack to map official structure names (in ykcore.h) to
+/* This is a hack to map official structure names (in okcore.h) to
    internal ones (in ykdef.h) */
 #define yk_key_st yubikey_st
 #define yk_status_st status_st
@@ -41,7 +41,7 @@
 #define yk_frame_st frame_st
 #define yk_device_config_st device_config_st
 
-#include "ykcore.h"
+#include "okcore.h"
 #include "ykdef.h"
 
 /*************************************************************************

@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef	__YKCORE_H_INCLUDED__
-#define	__YKCORE_H_INCLUDED__
+#ifndef	__YKCORE_ORIGINAL_H_INCLUDED__
+#define	__YKCORE_ORIGINAL_H_INCLUDED__
 
 #include <stdlib.h>
 #include <stdbool.h>
