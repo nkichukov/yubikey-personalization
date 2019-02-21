@@ -1,19 +1,19 @@
 # Written by Simon Josefsson <simon@yubico.com>.
 # Copyright (c) 2008-2014 Yubico AB
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #     * Redistributions of source code must retain the above copyright
 #       notice, this list of conditions and the following disclaimer.
-# 
+#
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
 #       disclaimer in the documentation and/or other materials provided
 #       with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -29,20 +29,20 @@
 LIBYKPERS_1.0 {
   global:
 # Functions:
-    yk_check_firmware_version;
-    yk_close_key;
+    ok_check_firmware_version;
+    ok_close_key;
     yk_endian_swap_16;
-    yk_force_key_update;
-    yk_get_status;
-    yk_init;
-    yk_open_first_key;
+    ok_force_key_update;
+    ok_get_status;
+    ok_init;
+    ok_open_first_key;
     yk_pbkdf2;
     yk_read_from_key;
-    yk_release;
+    ok_release;
     yk_strerror;
     yk_usb_strerror;
-    yk_write_config;
-    yk_write_to_key;
+    ok_write_config;
+    ok_write_to_key;
     ykds_alloc;
     ykds_free;
     ykds_pgm_seq;
@@ -113,9 +113,9 @@ LIBYKPERS_1.4 {
 LIBYKPERS_1.5 {
   global:
 # Functions:
-  yk_wait_for_key_status;
-  yk_read_response_from_key;
-  yk_get_serial;
+  ok_wait_for_key_status;
+  ok_read_response_from_key;
+  ok_get_serial;
 # Variables:
 } LIBYKPERS_1.4;
 
@@ -134,12 +134,12 @@ LIBYKPERS_1.7 {
   ykp_configure_version;
   ykp_command;
   ykp_configure_command;
-  yk_write_command;
+  ok_write_command;
   ykp_set_extflag_USE_NUMERIC_KEYPAD;
   ykp_set_extflag_FAST_TRIG;
   ykp_set_extflag_ALLOW_UPDATE;
   ykp_set_extflag_DORMANT;
-  yk_write_ndef;
+  ok_write_ndef;
   ykp_construct_ndef_uri;
   ykp_construct_ndef_text;
 # Variables:
@@ -148,7 +148,7 @@ LIBYKPERS_1.7 {
 LIBYKPERS_1.8 {
   global:
 # Functions:
-  yk_challenge_response;
+  ok_challenge_response;
   ykp_set_ndef_access_code;
   ykp_alloc_ndef;
   ykp_free_ndef;
@@ -165,16 +165,16 @@ LIBYKPERS_1.9 {
 LIBYKPERS_1.10 {
   global:
 # Functions:
-  yk_write_ndef2;
+  ok_write_ndef2;
   ykp_ndef_as_text;
-  yk_check_firmware_version2;
-  yk_write_device_config;
+  ok_check_firmware_version2;
+  ok_write_device_config;
   ykp_alloc_device_config;
   ykp_free_device_config;
   ykp_set_device_mode;
   ykp_set_device_chalresp_timeout;
   ykp_set_device_autoeject_time;
-  yk_write_scan_map;
+  ok_write_scan_map;
 # Variables:
 } LIBYKPERS_1.9;
 
@@ -255,27 +255,27 @@ LIBYKPERS_1.15 {
 LIBYKPERS_1.16 {
   global:
 # Functions:
-  yk_get_key_vid_pid;
+  ok_get_key_vid_pid;
 # Variables:
 } LIBYKPERS_1.15;
 
 LIBYKPERS_1.17 {
   global:
 # Functions:
-  yk_get_capabilities;
+  ok_get_capabilities;
 # Variables:
 } LIBYKPERS_1.16;
 
 LIBYKPERS_1.18 {
   global:
 # Functions:
-  yk_open_key;
+  ok_open_key;
 # Variables:
 } LIBYKPERS_1.17;
 
 LIBYKPERS_1.19 {
   global:
 # Functions:
-  yk_write_device_info;
+  ok_write_device_info;
 # Variables:
 } LIBYKPERS_1.18;

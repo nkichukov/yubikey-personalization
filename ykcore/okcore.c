@@ -65,68 +65,68 @@
  */
 #define WAIT_FOR_WRITE_FLAG	1150
 
-int ok_init(void)
+int yk_init(void)
 {
 	return _ykusb_start();
 }
 
-int ok_release(void)
+int yk_release(void)
 {
 	return _ykusb_stop();
 }
 
-YK_KEY *ok_open_first_key(void)
+YK_KEY *yk_open_first_key(void)
 {
-	return ok_open_key(0);
+	return yk_open_key(0);
 }
 
-YK_KEY *ok_open_key(int index)
+YK_KEY *yk_open_key(int index)
 {
 	int pids[] = {0x60fc}; //Added 3rd party PID
 
-	YK_KEY *ok = _ykusb_open_device(0x1d50, pids, sizeof(pids) / sizeof(int), index);
+	YK_KEY *yk = _ykusb_open_device(0x1d50, pids, sizeof(pids) / sizeof(int), index);
 
 	int rc = yk_errno;
 
-	if (ok) {
+	if (yk) {
 		YK_STATUS st;
 
-		if (!ok_get_status(ok, &st)) {
+		if (!yk_get_status(yk, &st)) {
 			rc = yk_errno;
-			ok_close_key(ok);
-			ok = NULL;
+			yk_close_key(yk);
+			yk = NULL;
 		}
 	}
 	yk_errno = rc;
-	return ok;
+	return yk;
 }
 
-int ok_close_key(YK_KEY *ok)
+int yk_close_key(YK_KEY *yk)
 {
-	return _ykusb_close_device(ok);
+	return _ykusb_close_device(yk);
 }
 
-int ok_check_firmware_version(YK_KEY *k)
+int yk_check_firmware_version(YK_KEY *k)
 {
 	YK_STATUS st;
 
-	if (!ok_get_status(k, &st))
+	if (!yk_get_status(k, &st))
 		return 0;
 
-	return ok_check_firmware_version2(&st);
+	return yk_check_firmware_version2(&st);
 }
 
 
-int ok_check_firmware_version2(YK_STATUS *st)
+int yk_check_firmware_version2(YK_STATUS *st)
 {
 	return 1;
 }
 
-int ok_get_status(YK_KEY *k, YK_STATUS *status)
+int yk_get_status(YK_KEY *k, YK_STATUS *status)
 {
 	unsigned int status_count = 0;
 
-	if (!ok_read_from_key(k, 0, status, sizeof(YK_STATUS), &status_count))
+	if (!yk_read_from_key(k, 0, status, sizeof(YK_STATUS), &status_count))
 		return 0;
 
 	if (status_count != sizeof(YK_STATUS)) {
@@ -150,7 +150,7 @@ int ok_get_status(YK_KEY *k, YK_STATUS *status)
  *
  * The slot parameter is here for future purposes only.
  */
-int ok_get_serial(YK_KEY *ok, uint8_t slot, unsigned int flags, unsigned int *serial)
+int yk_get_serial(YK_KEY *yk, uint8_t slot, unsigned int flags, unsigned int *serial)
 {
 	unsigned char buf[FEATURE_RPT_SIZE * 2];
 	unsigned int response_len = 0;
@@ -158,12 +158,12 @@ int ok_get_serial(YK_KEY *ok, uint8_t slot, unsigned int flags, unsigned int *se
 
 	memset(buf, 0, sizeof(buf));
 
-	if (!ok_write_to_key(ok, SLOT_DEVICE_SERIAL, &buf, 0))
+	if (!yk_write_to_key(yk, SLOT_DEVICE_SERIAL, &buf, 0))
 		return 0;
 
 	expect_bytes = 4;
 
-	if (! ok_read_response_from_key(ok, slot, flags,
+	if (! yk_read_response_from_key(yk, slot, flags,
 					&buf, sizeof(buf),
 					expect_bytes,
 					&response_len))
@@ -182,15 +182,15 @@ int ok_get_serial(YK_KEY *ok, uint8_t slot, unsigned int flags, unsigned int *se
 	return 1;
 }
 
-int ok_get_capabilities(YK_KEY *ok, uint8_t slot, unsigned int flags,
+int yk_get_capabilities(YK_KEY *yk, uint8_t slot, unsigned int flags,
 		unsigned char *capabilities, unsigned int *len)
 {
 	unsigned int response_len = 0;
 
-	if (!ok_write_to_key(ok, SLOT_YK4_CAPABILITIES, capabilities, 0))
+	if (!yk_write_to_key(yk, SLOT_YK4_CAPABILITIES, capabilities, 0))
 		return 0;
 
-	if (! ok_read_response_from_key(ok, slot, flags,
+	if (! yk_read_response_from_key(yk, slot, flags,
 					capabilities, *len, 0, /* we have no idea how much data we'll get */
 					&response_len))
 		return 0;
@@ -209,20 +209,20 @@ int ok_get_capabilities(YK_KEY *ok, uint8_t slot, unsigned int flags,
 	return 1;
 }
 
-static int _yk_write(YK_KEY *ok, uint8_t yk_cmd, unsigned char *buf, size_t len)
+static int _yk_write(YK_KEY *yk, uint8_t yk_cmd, unsigned char *buf, size_t len)
 {
 	YK_STATUS stat;
 	int seq;
 
 	/* Get current sequence # from status block */
 
-	if (!ok_get_status(ok, &stat /*, 0*/))
+	if (!yk_get_status(yk, &stat /*, 0*/))
 		return 0;
 
 	seq = stat.pgmSeq;
 
 	/* Write to Yubikey */
-	if (!ok_write_to_key(ok, yk_cmd, buf, len))
+	if (!yk_write_to_key(yk, yk_cmd, buf, len))
 		return 0;
 
 	/* When the Yubikey clears the SLOT_WRITE_FLAG, it has processed the last write.
@@ -230,12 +230,12 @@ static int _yk_write(YK_KEY *ok, uint8_t yk_cmd, unsigned char *buf, size_t len)
 	 * want to get the bytes in the status message, but when writing configuration
 	 * we don't expect any data back.
 	 */
-	if(!ok_wait_for_key_status(ok, yk_cmd, 0, WAIT_FOR_WRITE_FLAG, false, SLOT_WRITE_FLAG, NULL))
+	if(!yk_wait_for_key_status(yk, yk_cmd, 0, WAIT_FOR_WRITE_FLAG, false, SLOT_WRITE_FLAG, NULL))
 		return 0;
 
 	/* Verify update */
 
-	if (!ok_get_status(ok, &stat /*, 0*/))
+	if (!yk_get_status(yk, &stat /*, 0*/))
 		return 0;
 
 	yk_errno = YK_EWRITEERR;
@@ -249,13 +249,13 @@ static int _yk_write(YK_KEY *ok, uint8_t yk_cmd, unsigned char *buf, size_t len)
 	return stat.pgmSeq != seq;
 }
 
-int ok_write_device_info(YK_KEY *ok, unsigned char *buf, unsigned int len)
+int yk_write_device_info(YK_KEY *yk, unsigned char *buf, unsigned int len)
 {
-	return _yk_write(ok, SLOT_YK4_SET_DEVICE_INFO, buf, len);
+	return _yk_write(yk, SLOT_YK4_SET_DEVICE_INFO, buf, len);
 }
 
 
-int ok_write_command(YK_KEY *ok, YK_CONFIG *cfg, uint8_t command,
+int yk_write_command(YK_KEY *yk, YK_CONFIG *cfg, uint8_t command,
 		    unsigned char *acc_code)
 {
 	int ret;
@@ -277,12 +277,12 @@ int ok_write_command(YK_KEY *ok, YK_CONFIG *cfg, uint8_t command,
 	if (acc_code)
 		memcpy(buf + sizeof(YK_CONFIG), acc_code, ACC_CODE_SIZE);
 
-	ret = _yk_write(ok, command, buf, sizeof(buf));
+	ret = _yk_write(yk, command, buf, sizeof(buf));
 	insecure_memzero(buf, sizeof(buf));
 	return ret;
 }
 
-int ok_write_config(YK_KEY *ok, YK_CONFIG *cfg, int confnum,
+int yk_write_config(YK_KEY *yk, YK_CONFIG *cfg, int confnum,
 		    unsigned char *acc_code)
 {
 	uint8_t command;
@@ -297,19 +297,19 @@ int ok_write_config(YK_KEY *ok, YK_CONFIG *cfg, int confnum,
 		yk_errno = YK_EINVALIDCMD;
 		return 0;
 	}
-	if(!ok_write_command(ok, cfg, command, acc_code)) {
+	if(!yk_write_command(yk, cfg, command, acc_code)) {
 		return 0;
 	}
 	return 1;
 }
 
-int ok_write_ndef(YK_KEY *ok, YK_NDEF *ndef)
+int yk_write_ndef(YK_KEY *yk, YK_NDEF *ndef)
 {
 	/* just wrap yk_write_ndef2() with confnum 1 */
-	return ok_write_ndef2(ok, ndef, 1);
+	return yk_write_ndef2(yk, ndef, 1);
 }
 
-int ok_write_ndef2(YK_KEY *ok, YK_NDEF *ndef, int confnum)
+int yk_write_ndef2(YK_KEY *yk, YK_NDEF *ndef, int confnum)
 {
 	unsigned char buf[sizeof(YK_NDEF)];
 	uint8_t command;
@@ -331,28 +331,28 @@ int ok_write_ndef2(YK_KEY *ok, YK_NDEF *ndef, int confnum)
 	memset(buf, 0, sizeof(buf));
 	memcpy(buf, ndef, sizeof(YK_NDEF));
 
-	return _yk_write(ok, command, buf, sizeof(YK_NDEF));
+	return _yk_write(yk, command, buf, sizeof(YK_NDEF));
 }
 
-int ok_write_device_config(YK_KEY *ok, YK_DEVICE_CONFIG *device_config)
+int yk_write_device_config(YK_KEY *yk, YK_DEVICE_CONFIG *device_config)
 {
 	unsigned char buf[sizeof(YK_DEVICE_CONFIG)];
 
 	memset(buf, 0, sizeof(buf));
 	memcpy(buf, device_config, sizeof(YK_DEVICE_CONFIG));
 
-	return _yk_write(ok, SLOT_DEVICE_CONFIG, buf, sizeof(YK_DEVICE_CONFIG));
+	return _yk_write(yk, SLOT_DEVICE_CONFIG, buf, sizeof(YK_DEVICE_CONFIG));
 }
 
-int ok_write_scan_map(YK_KEY *ok, unsigned char *scan_map)
+int yk_write_scan_map(YK_KEY *yk, unsigned char *scan_map)
 {
-	return _yk_write(ok, SLOT_SCAN_MAP, scan_map, strlen(SCAN_MAP));
+	return _yk_write(yk, SLOT_SCAN_MAP, scan_map, strlen(SCAN_MAP));
 }
 
 /*
  * This function is for doing HMAC-SHA1 or Yubico challenge-response with a key.
  */
-int ok_challenge_response(YK_KEY *ok, uint8_t yk_cmd, int may_block,
+int yk_challenge_response(YK_KEY *yk, uint8_t yk_cmd, int may_block,
 		unsigned int challenge_len, const unsigned char *challenge,
 		unsigned int response_len, unsigned char *response)
 {
@@ -377,11 +377,11 @@ int ok_challenge_response(YK_KEY *ok, uint8_t yk_cmd, int may_block,
 	if (may_block)
 		flags |= YK_FLAG_MAYBLOCK;
 
-	if (! ok_write_to_key(ok, yk_cmd, challenge, challenge_len)) {
+	if (! yk_write_to_key(yk, yk_cmd, challenge, challenge_len)) {
 		return 0;
 	}
 
-	if (! ok_read_response_from_key(ok, yk_cmd, flags,
+	if (! yk_read_response_from_key(yk, yk_cmd, flags,
 				response, response_len,
 				expect_bytes,
 				&bytes_read)) {
@@ -457,7 +457,7 @@ const char *yk_usb_strerror(void)
  *
  * The slot parameter is here for future purposes only.
  */
-int ok_read_from_key(YK_KEY *ok, uint8_t slot,
+int yk_read_from_key(YK_KEY *yk, uint8_t slot,
 		     void *buf, unsigned int bufsize, unsigned int *bufcount)
 {
 	unsigned char data[FEATURE_RPT_SIZE];
@@ -469,7 +469,7 @@ int ok_read_from_key(YK_KEY *ok, uint8_t slot,
 
 	memset(data, 0, sizeof(data));
 
-	if (!_ykusb_read(ok, REPORT_TYPE_FEATURE, 0, (char *)data, FEATURE_RPT_SIZE))
+	if (!_ykusb_read(yk, REPORT_TYPE_FEATURE, 0, (char *)data, FEATURE_RPT_SIZE))
 		return 0;
 
 	/* This makes it apparent that there's some mysterious value in
@@ -485,7 +485,7 @@ int ok_read_from_key(YK_KEY *ok, uint8_t slot,
  *
  * The slot parameter is here for future purposes only.
  */
-int ok_wait_for_key_status(YK_KEY *ok, uint8_t slot, unsigned int flags,
+int yk_wait_for_key_status(YK_KEY *yk, uint8_t slot, unsigned int flags,
 			   unsigned int max_time_ms,
 			   bool logic_and, unsigned char mask,
 			   unsigned char *last_data)
@@ -514,7 +514,7 @@ int ok_wait_for_key_status(YK_KEY *ok, uint8_t slot, unsigned int flags,
 
 		/* Read a status report from the key */
 		memset(data, 0, sizeof(data));
-		if (!_ykusb_read(ok, REPORT_TYPE_FEATURE, slot, (char *) &data, FEATURE_RPT_SIZE))
+		if (!_ykusb_read(yk, REPORT_TYPE_FEATURE, slot, (char *) &data, FEATURE_RPT_SIZE))
 			return 0;
 #ifdef YK_DEBUG
 		_yk_hexdump(data, FEATURE_RPT_SIZE);
@@ -546,7 +546,7 @@ int ok_wait_for_key_status(YK_KEY *ok, uint8_t slot, unsigned int flags,
 				}
 			} else {
 				/* Reset read mode of Yubikey before aborting. */
-				ok_force_key_update(ok);
+				yk_force_key_update(yk);
 				yk_errno = YK_EWOULDBLOCK;
 				return 0;
 			}
@@ -578,7 +578,7 @@ int ok_wait_for_key_status(YK_KEY *ok, uint8_t slot, unsigned int flags,
  *
  * The slot parameter is here for future purposes only.
  */
-int ok_read_response_from_key(YK_KEY *ok, uint8_t slot, unsigned int flags,
+int yk_read_response_from_key(YK_KEY *yk, uint8_t slot, unsigned int flags,
 			      void *buf, unsigned int bufsize, unsigned int expect_bytes,
 			      unsigned int *bytes_read)
 {
@@ -592,7 +592,7 @@ int ok_read_response_from_key(YK_KEY *ok, uint8_t slot, unsigned int flags,
 	fprintf(stderr, "YK_DEBUG: Read %i bytes from YubiKey :\n", expect_bytes);
 #endif
 	/* Wait for the key to turn on RESP_PENDING_FLAG */
-	if (! ok_wait_for_key_status(ok, slot, flags, 1000, true, RESP_PENDING_FLAG, (unsigned char *) &data))
+	if (! yk_wait_for_key_status(yk, slot, flags, 1000, true, RESP_PENDING_FLAG, (unsigned char *) &data))
 		return 0;
 
 	/* The first part of the response was read by yk_wait_for_key_status(). We need
@@ -604,7 +604,7 @@ int ok_read_response_from_key(YK_KEY *ok, uint8_t slot, unsigned int flags,
 	while (*bytes_read + FEATURE_RPT_SIZE <= bufsize) {
 		memset(data, 0, sizeof(data));
 
-		if (!_ykusb_read(ok, REPORT_TYPE_FEATURE, 0, (char *)data, FEATURE_RPT_SIZE))
+		if (!_ykusb_read(yk, REPORT_TYPE_FEATURE, 0, (char *)data, FEATURE_RPT_SIZE))
 			return 0;
 #ifdef YK_DEBUG
 		_yk_hexdump(data, FEATURE_RPT_SIZE);
@@ -635,7 +635,7 @@ int ok_read_response_from_key(YK_KEY *ok, uint8_t slot, unsigned int flags,
 				}
 
 				/* Reset read mode of Yubikey before returning. */
-				ok_force_key_update(ok);
+				yk_force_key_update(yk);
 
 				return 1;
 			}
@@ -644,14 +644,14 @@ int ok_read_response_from_key(YK_KEY *ok, uint8_t slot, unsigned int flags,
 			*bytes_read += sizeof(data) - 1;
 		} else {
 			/* Reset read mode of Yubikey before returning. */
-			ok_force_key_update(ok);
+			yk_force_key_update(yk);
 
 			return 0;
 		}
 	}
 
 	/* We're out of buffer space, abort reading */
-	ok_force_key_update(ok);
+	yk_force_key_update(yk);
 
 	yk_errno = YK_EWRONGSIZ;
 	return 0;
@@ -662,7 +662,7 @@ int ok_read_response_from_key(YK_KEY *ok, uint8_t slot, unsigned int flags,
  * given in the 'slot' parameter (e.g. SLOT_CHAL_HMAC2 to send a HMAC-SHA1
  * challenge to slot 2).
  */
-int ok_write_to_key(YK_KEY *ok, uint8_t slot, const void *buf, int bufcount)
+int yk_write_to_key(YK_KEY *yk, uint8_t slot, const void *buf, int bufcount)
 {
 	YK_FRAME frame;
 	unsigned char repbuf[FEATURE_RPT_SIZE];
@@ -715,13 +715,13 @@ int ok_write_to_key(YK_KEY *ok, uint8_t slot, const void *buf, int bufcount)
 		/* When the Yubikey clears the SLOT_WRITE_FLAG, the
 		 * next part can be sent.
 		 */
-		if (! ok_wait_for_key_status(ok, slot, 0, WAIT_FOR_WRITE_FLAG,
+		if (! yk_wait_for_key_status(yk, slot, 0, WAIT_FOR_WRITE_FLAG,
 					     false, SLOT_WRITE_FLAG, NULL))
 			goto end;
 #ifdef YK_DEBUG
 		_yk_hexdump(repbuf, FEATURE_RPT_SIZE);
 #endif
-		if (!_ykusb_write(ok, REPORT_TYPE_FEATURE, 0,
+		if (!_ykusb_write(yk, REPORT_TYPE_FEATURE, 0,
 				  (char *)repbuf, FEATURE_RPT_SIZE))
 			goto end;
 	}
@@ -733,20 +733,20 @@ end:
 	return ret;
 }
 
-int ok_force_key_update(YK_KEY *ok)
+int yk_force_key_update(YK_KEY *yk)
 {
 	unsigned char buf[FEATURE_RPT_SIZE];
 
 	memset(buf, 0, sizeof(buf));
 	buf[FEATURE_RPT_SIZE - 1] = DUMMY_REPORT_WRITE; /* Invalid sequence = update only */
-	if (!_ykusb_write(ok, REPORT_TYPE_FEATURE, 0, (char *)buf, FEATURE_RPT_SIZE))
+	if (!_ykusb_write(yk, REPORT_TYPE_FEATURE, 0, (char *)buf, FEATURE_RPT_SIZE))
 		return 0;
 
 	return 1;
 }
 
-int ok_get_key_vid_pid(YK_KEY *ok, int *vid, int *pid) {
-	return _ykusb_get_vid_pid(ok, vid, pid);
+int yk_get_key_vid_pid(YK_KEY *yk, int *vid, int *pid) {
+	return _ykusb_get_vid_pid(yk, vid, pid);
 }
 
 uint16_t yk_endian_swap_16(uint16_t x)

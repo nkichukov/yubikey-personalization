@@ -35,7 +35,7 @@
 #include <stdbool.h>
 
 #include <ykstatus.h>
-#include <ykcore.h>
+#include <okcore.h>
 #include <ykdef.h>
 
 struct versions {
@@ -109,4 +109,3 @@ int main(void)
 
 	return 0;
 }
-

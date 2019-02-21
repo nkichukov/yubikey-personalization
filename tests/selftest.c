@@ -29,7 +29,7 @@
  */
 
 #include <ykpers.h>
-#include <ykpers-version.h>
+#include <okpers-version.h>
 #include <stdio.h>
 #include <string.h>
 

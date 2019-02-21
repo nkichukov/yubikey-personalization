@@ -40,29 +40,10 @@
 #include <ykdef.h>
 #include <okcore.h>
 #include <ykstatus.h>
-#include <ykpers-version.h>
+#include <okpers-version.h>
 
 const char *usage =
-	"Usage: ykchalresp [options] [challenge]\n"
-	"\n"
-	"Options :\n"
-	"\n"
-	"\t-nkey     Send challenge to nth key found.\n"
-	"\t-1        Send challenge to slot 1. This is the default.\n"
-	"\t-2        Send challenge to slot 2.\n"
-	"\t-H        Send a 64 byte HMAC challenge. This is the default.\n"
-	"\t-Y        Send a 6 byte Yubico challenge.\n"
-	"\t-N        Abort if Yubikey requires button press.\n"
-	"\t-x        Challenge is hex encoded.\n"
-	"\t-t        Time based challenge (for TOTP)\n"
-	"\t-6        Output 6 digit HOTP/TOTP code\n"
-	"\t-8        Output 8 digit HOTP/TOTP code\n"
-	"\t-iFILE    Read challenge from a file instead, - for STDIN\n"
-	"\n"
-	"\t-v        verbose\n"
-	"\t-V        tool version\n"
-	"\t-h        help (this text)\n"
-	"\n"
+	"Usage: okchalresp [options] [challenge]\n"
 	"\n"
 	;
 const char *optstring = "1268xvhHtYNVi:n:";
@@ -74,7 +55,7 @@ static void report_yk_error(void)
 			fprintf(stderr, "USB error: %s\n",
 				yk_usb_strerror());
 		} else {
-			fprintf(stderr, "Yubikey core error: %s\n",
+			fprintf(stderr, "OnlyKey core error: %s\n",
 				yk_strerror(yk_errno));
 		}
 	}
@@ -232,7 +213,7 @@ static int check_firmware(YK_KEY *yk, bool verbose)
 	if (ykds_version_major(st) < 2 ||
 	    (ykds_version_major(st) == 2
 	     && ykds_version_minor(st) < 2)) {
-		fprintf(stderr, "Challenge-response not supported before YubiKey 2.2.\n");
+		fprintf(stderr, "Challenge-response not supported \n");
 		ykds_free(st);
 		return 0;
 	}

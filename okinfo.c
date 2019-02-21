@@ -37,33 +37,11 @@
 #include <yubikey.h>
 #include <okcore.h>
 #include <ykstatus.h>
-#include <ykpers-version.h>
+#include <okpers-version.h>
 #include <ykdef.h>
 
 const char *usage =
-	"Usage: ykinfo [options]\n"
-	"\n"
-	"Options :\n"
-	"\n"
-	"\t-s        Get serial in decimal from YubiKey\n"
-	"\t-m        Get serial in modhex from YubiKey\n"
-	"\t-nkey     Read from nth key found\n"
-	"\t-H        Get serial in hex from YubiKey\n"
-	"\t-v        Get version from YubiKey\n"
-	"\t-t        Get touchlevel from YubiKey\n"
-	"\t-1        Check if slot 1 is programmed\n"
-	"\t-2        Check if slot 2 is programmed\n"
-	"\t-p        Get programming sequence from YubiKey\n"
-	"\t-i        Get vendor id of YubiKey\n"
-	"\t-I        Get product id of YubiKey\n"
-	"\t-a        Get all information above\n"
-	"\t-c        Get capabilities from YubiKey\n"
-	"\n"
-	"\t-q        Only output information from YubiKey\n"
-	"\n"
-	"\t-V        Get the tool version\n"
-	"\t-h        help (this text)\n"
-	"\n"
+	"Usage: okinfo [options]\n"
 	"\n"
 	;
 const char *optstring = "asmn:HvtpqhV12iIc";
@@ -75,7 +53,7 @@ static void report_yk_error(void)
 			fprintf(stderr, "USB error: %s\n",
 				yk_usb_strerror());
 		} else {
-			fprintf(stderr, "Yubikey core error: %s\n",
+			fprintf(stderr, "core error: %s\n",
 				yk_strerror(yk_errno));
 		}
 	}

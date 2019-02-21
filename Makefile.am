@@ -39,56 +39,56 @@ AM_CFLAGS += $(libjson_CFLAGS)
 
 # The library.
 
-ykpers_includedir=$(includedir)/ykpers-1
-ykpers_include_HEADERS = ykpers.h ykpers-version.h
-ykpers_include_HEADERS += ykcore/ykstatus.h ykcore/okcore.h ykcore/ykdef.h
-ykpers_include_HEADERS += ykpbkdf2.h
+okpers_includedir=$(includedir)/ykpers-1
+okpers_include_HEADERS = ykpers.h okpers-version.h
+okpers_include_HEADERS += ykcore/ykstatus.h ykcore/okcore.h ykcore/ykdef.h
+okpers_include_HEADERS += ykpbkdf2.h
 
 noinst_LTLIBRARIES = libhmac.la
 libhmac_la_SOURCES = hmac.c usha.c sha.h sha1.c sha224-256.c
 libhmac_la_SOURCES += sha384-512.c sha-private.h
 libhmac_la_CFLAGS =
 
-lib_LTLIBRARIES = libykpers-1.la
-libykpers_1_la_SOURCES = ykpers.c ykpers-version.c ykpbkdf2.c
+lib_LTLIBRARIES = libokpers-1.la
+libokpers_1_la_SOURCES = ykpers.c okpers-version.c ykpbkdf2.c
 if JSON
-libykpers_1_la_SOURCES += ykpers-json.c
+libokpers_1_la_SOURCES += ykpers-json.c
 else
-libykpers_1_la_SOURCES += ykpers-nojson.c
+libokpers_1_la_SOURCES += ykpers-nojson.c
 endif
-libykpers_1_la_SOURCES += ykpers_lcl.h ykpers-json.h ykpers_lcl.c
-libykpers_1_la_SOURCES += ykpers-1.pc.in libykpers-1.map
-libykpers_1_la_LIBADD = $(LTLIBYUBIKEY) ./ykcore/libykcore.la ./libhmac.la $(libjson_LIBS)
-libykpers_1_la_LDFLAGS = -no-undefined \
+libokpers_1_la_SOURCES += ykpers_lcl.h ykpers-json.h ykpers_lcl.c
+libokpers_1_la_SOURCES += ykpers-1.pc.in libokpers-1.map
+libokpers_1_la_LIBADD = $(LTLIBYUBIKEY) ./ykcore/libykcore.la ./libhmac.la $(libjson_LIBS)
+libokpers_1_la_LDFLAGS = -no-undefined \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
-EXTRA_libykpers_1_la_DEPENDENCIES = libykpers-1.map
+EXTRA_libokpers_1_la_DEPENDENCIES = libokpers-1.map
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = ykpers-1.pc
 
 if HAVE_LD_VERSION_SCRIPT
-libykpers_1_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libykpers-1.map
+libokpers_1_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libokpers-1.map
 else
-libykpers_1_la_LDFLAGS += -export-symbols-regex '^(ykp|yk|ykds|ykpers)_.*|_yk.*_errno_location'
+libokpers_1_la_LDFLAGS += -export-symbols-regex '^(ykp|yk|ykds|ykpers)_.*|_yk.*_errno_location'
 endif
 
 # The command line tools.
 
-bin_PROGRAMS = ykpersonalize ykchalresp ykinfo
+bin_PROGRAMS = okpersonalize okchalresp okinfo
 
-ykpersonalize_SOURCES = ykpersonalize.c
-ykpersonalize_LDADD = ./libykpers-1.la
-ykpersonalize_LDADD += ./libykpers_args.la
+okpersonalize_SOURCES = okpersonalize.c
+okpersonalize_LDADD = ./libokpers-1.la
+okpersonalize_LDADD += ./libokpers_args.la
 
-noinst_LTLIBRARIES += libykpers_args.la
-libykpers_args_la_SOURCES = ykpers-args.c ykpers-args.h
-libykpers_args_la_LIBADD = libykpers-1.la $(LTLIBYUBIKEY)
+noinst_LTLIBRARIES += libokpers_args.la
+libokpers_args_la_SOURCES = ykpers-args.c ykpers-args.h
+libokpers_args_la_LIBADD = libokpers-1.la $(LTLIBYUBIKEY)
 
-ykchalresp_SOURCES = ykchalresp.c
-ykchalresp_LDADD = ./libykpers-1.la $(LTLIBYUBIKEY)
+okchalresp_SOURCES = okchalresp.c
+okchalresp_LDADD = ./libokpers-1.la $(LTLIBYUBIKEY)
 
-ykinfo_SOURCES = ykinfo.c
-ykinfo_LDADD = ./libykpers-1.la $(LTLIBYUBIKEY)
+okinfo_SOURCES = okinfo.c
+okinfo_LDADD = ./libokpers-1.la $(LTLIBYUBIKEY)
 
 dist_man1_MANS = ykpersonalize.1 ykchalresp.1 ykinfo.1
 DISTCLEANFILES = $(dist_man1_MANS)

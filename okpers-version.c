@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <ykpers-version.h>
+#include <okpers-version.h>
 #include <stddef.h>
 
 #define _GNU_SOURCE

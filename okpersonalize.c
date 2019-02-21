@@ -38,7 +38,7 @@
 
 #include <ykpers.h>
 #include <ykdef.h>
-#include <ykpers-version.h>
+#include <okpers-version.h>
 
 #include "ykpers-args.h"
 
@@ -138,11 +138,7 @@ int main(int argc, char **argv)
 
 	if (!(yk_check_firmware_version2(st))) {
 		if (yk_errno == YK_EFIRMWARE) {
-			printf("Unsupported firmware revision - some "
-			       "features may not be available\n"
-			       "Please see \n"
-			       "https://developers.yubico.com/yubikey-personalization/doc/Compatibility.html\n"
-			       "for more information.\n");
+			printf("Unsupported firmware revision\n");
 		} else {
 			goto err;
 		}
@@ -309,7 +305,7 @@ int main(int argc, char **argv)
 			exit_code = 2;
 
 			if (verbose)
-				printf("Attempting to write configuration to the yubikey...");
+				printf("Attempting to write configuration...");
 			if (dry_run) {
 				printf("Not writing anything to key due to dry_run requested.\n");
 			}

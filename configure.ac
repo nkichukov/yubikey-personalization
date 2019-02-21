@@ -234,7 +234,7 @@ AC_SUBST(YKPERS_VERSION_NUMBER, `printf "0x%02x%02x%02x" $YKPERS_VERSION_MAJOR $
 AC_CONFIG_FILES([
   Makefile
   ykpers-1.pc
-  ykpers-version.h
+  okpers-version.h
   ykcore/Makefile
   tests/Makefile
 ])
