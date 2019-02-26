@@ -28,10 +28,10 @@
 
 LIBYUBIKEYVERSION=1.13
 LIBJSONVERSION=0.13.1
-PROJECT=yubikey-personalization
-PACKAGE=ykpers
+PROJECT=onlykey-personalization
+PACKAGE=okpers
 
-all: usage ykpers4win32 ykpers4win64
+all: usage okpers4win32 okpers4win64
 
 .PHONY: usage
 usage:
@@ -43,7 +43,7 @@ usage:
 		exit 1; \
 	fi
 
-ykpers4win:
+okpers4win:
 	rm -rf tmp && mkdir tmp && cd tmp && \
 	mkdir -p root/licenses && \
 	cp ../json-c-$(LIBJSONVERSION) . \
@@ -62,10 +62,10 @@ ykpers4win:
 	make install $(CHECK) && \
 	cp COPYING $(PWD)/tmp/root/licenses/libyubikey.txt && \
 	cd .. && \
-	cp ../ykpers-$(VERSION).tar.gz . \
-		|| wget https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/ykpers-$(VERSION).tar.gz && \
-	tar xfa ykpers-$(VERSION).tar.gz && \
-	cd ykpers-$(VERSION)/ && \
+	cp ../okpers-$(VERSION).tar.gz . \
+		|| wget https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/okpers-$(VERSION).tar.gz && \
+	tar xfa okpers-$(VERSION).tar.gz && \
+	cd okpers-$(VERSION)/ && \
 	PKG_CONFIG_PATH=$(PWD)/tmp/root/lib/pkgconfig lt_cv_deplibs_check_method=pass_all ./configure --host=$(HOST) --build=x86_64-unknown-linux-gnu --prefix=$(PWD)/tmp/root LDFLAGS=-L$(PWD)/tmp/root/lib CPPFLAGS=-I$(PWD)/tmp/root/include && \
 	make install $(CHECK) && \
 	rm $(PWD)/tmp/root/lib/*.la && \
@@ -73,27 +73,10 @@ ykpers4win:
 	cp COPYING $(PWD)/tmp/root/licenses/yubikey-personalization.txt && \
 	cd .. && \
 	cd root && \
-	zip -r ../../ykpers-$(VERSION)-win$(ARCH).zip *
+	zip -r ../../okpers-$(VERSION)-win$(ARCH).zip *
 
-ykpers4win32:
-	$(MAKE) -f ykpers4win.mk ykpers4win ARCH=32 HOST=i686-w64-mingw32 CHECK=check
+okpers4win32:
+	$(MAKE) -f okpers4win.mk okpers4win ARCH=32 HOST=i686-w64-mingw32 CHECK=check
 
-ykpers4win64:
-	$(MAKE) -f ykpers4win.mk ykpers4win ARCH=64 HOST=x86_64-w64-mingw32 CHECK=check
-
-upload-ykpers4win:
-	@if test ! -d "$(YUBICO_WWW_REPO)"; then \
-		echo "yubico www repo not found!"; \
-		echo "Make sure that YUBICO_WWW_REPO is set"; \
-		exit 1; \
-	fi
-	gpg --detach-sign --default-key $(PGPKEYID) \
-		$(PACKAGE)-$(VERSION)-win$(BITS).zip
-	gpg --verify $(PACKAGE)-$(VERSION)-win$(BITS).zip.sig
-	$(YUBICO_WWW_REPO)/publish $(PROJECT) $(VERSION) $(PACKAGE)-$(VERSION)-win${BITS}.zip*
-
-upload-ykpers4win32:
-	$(MAKE) -f ykpers4win.mk upload-ykpers4win BITS=32
-
-upload-ykpers4win64:
-	$(MAKE) -f ykpers4win.mk upload-ykpers4win BITS=64
+okpers4win64:
+	$(MAKE) -f okpers4win.mk okpers4win ARCH=64 HOST=x86_64-w64-mingw32 CHECK=check
