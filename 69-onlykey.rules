@@ -1,0 +1,10 @@
+ACTION!="add|change", GOTO="ok_end"
+
+# Udev rules for letting the console user access the OnlyKey USB
+# device node, needed for challenge/response to work correctly.
+
+# OnlyKey
+ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="60fc", \
+    ENV{ID_SECURITY_TOKEN}="1"
+
+LABEL="ok_end"
