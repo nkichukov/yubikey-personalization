@@ -47,28 +47,28 @@
 #endif
 #define FREE_THREADS free(threads)
 
-#include <ykpers.h>
+#include <okpers.h>
 
 static void *start_thread(void *arg)
 {
-	YK_STATUS *st;
-	YK_KEY *yk = 0;
-	yk_errno = 0;
-	ykp_errno = 0;
-	if(!yk_init()) {
+	OK_STATUS *st;
+	OK_KEY *ok = 0;
+	ok_errno = 0;
+	okp_errno = 0;
+	if(!ok_init()) {
 		printf("failed to init usb..\n");
 		return NULL;
 	}
-	st = ykds_alloc();
+	st = okds_alloc();
 
-	yk = yk_open_key(0);
-	if(yk != 0) {
-		yk_get_status(yk, st);
-		yk_close_key(yk);
+	ok = ok_open_key(0);
+	if(ok != 0) {
+		ok_get_status(ok, st);
+		ok_close_key(ok);
 	}
 
-	ykds_free(st);
-	yk_release();
+	okds_free(st);
+	ok_release();
 	return NULL;
 }
 

@@ -1,6 +1,6 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Copyright (c) 2008-2019 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +28,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
+#ifndef	__OKBZERO_H_INCLUDED__
+#define	__OKBZERO_H_INCLUDED__
+
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <string.h>
+#endif
 
-int main (void)
-{
-	OKP_CONFIG *okp;
-	int rc;
+#ifdef _WIN32
+#define insecure_memzero(buf, len) SecureZeroMemory(buf, len)
+#elif HAVE_MEMSET_S
+#define insecure_memzero(buf, len) memset_s(buf, len, 0, len)
+#elif HAVE_EXPLICIT_BZERO
+#define insecure_memzero(buf, len) explicit_bzero(buf, len)
+#elif HAVE_EXPLICIT_MEMSET
+#define insecure_memzero(buf, len) explicit_memset(buf, 0, len)
+#elif HAVE_INLINE_ASM
+#define insecure_memzero(buf, len) do {                                 \
+                memset(buf, 0, len);                                    \
+                __asm__ __volatile__ ("" : : "r"(buf) : "memory");      \
+        } while (0)
+#else
+#define insecure_memzero(buf, len) do {                                 \
+                volatile unsigned char *volatile __buf_ =               \
+                        (volatile unsigned char *volatile)buf;          \
+                size_t __i_ = 0;                                        \
+                while (__i_ < len) __buf_[__i_++] = 0;                  \
+        } while (0)
+#endif
 
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
-	}
-
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
-
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
-
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
-
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
-
-	return 0;
-}
+#endif	/* __OKBZERO_H_INCLUDED__ */

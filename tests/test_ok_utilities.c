@@ -1,6 +1,6 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2011-2013 Yubico AB
+ * Copyright (c) 2012-2015 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,68 +29,84 @@
  */
 
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <assert.h>
+#include <stdbool.h>
 
-#include <okpers.h>
+#include <okstatus.h>
+#include <okcore.h>
 #include <okdef.h>
 
-static void _test_128_bits_key(OKP_CONFIG *okp, struct config_st *cfg)
+struct versions {
+	int major;
+	int minor;
+	int build;
+	bool support;
+} supported[] = {
+	{0,8,0,true},
+	{0,9,9,true},
+	{1,2,9,true},
+	{1,3,1,true},
+	{1,4,5,true},
+	{2,0,2,true},
+	{2,1,1,true},
+	{2,2,3,true},
+	{2,3,0,true},
+	{2,4,5,true},
+	{2,5,2,true},
+	{2,6,0,true},
+	{3,0,1,true},
+	{3,2,8,true},
+	{3,3,0,true},
+	{3,4,3,true},
+	{3,5,1,true},
+	{4,0,1,true},
+	{4,1,2,true},
+	{4,1,10,true},
+	{4,2,1,true},
+	{4,3,7,true},
+	{4,4,5,true},
+	{5,0,0,true},
+};
+
+static OK_STATUS * _test_init_st(int major, int minor, int build)
 {
-	unsigned char empty[256];
+	OK_STATUS *st = okds_alloc();
+	struct status_st *t;
 
-	memset (empty, 0, sizeof(empty));
-	memset (cfg, 0, sizeof(struct config_st));
-	cfg->tktFlags = TKTFLAG_APPEND_CR;
+	t = (struct status_st *) st;
 
-	okp_AES_key_from_passphrase(okp, "test", "ABCDEF");
+	/* connected key details */
+	t->versionMajor = major;
+	t->versionMinor = minor;
+	t->versionBuild = build;
 
-	/* make sure config.key now has non-zero bytes in it */
-	assert(memcmp(cfg->key, empty, sizeof(cfg->key)) != 0);
-	/* make sure config.uid is still zero for 128 bits config */
-	assert(memcmp(cfg->uid, empty, sizeof(cfg->uid)) == 0);
+	return st;
 }
 
-static void _test_160_bits_key(OKP_CONFIG *okp, struct config_st *cfg)
+static void _test_ok_firmware(void)
 {
-	unsigned char empty[256];
-
-	memset (empty, 0, sizeof(empty));
-	memset (cfg, 0, sizeof(struct config_st));
-	cfg->tktFlags = TKTFLAG_APPEND_CR | TKTFLAG_OATH_HOTP;
-
-	okp_AES_key_from_passphrase(okp, "test", "ABCDEF");
-
-	/* make sure config.key now has non-zero bytes in it */
-	assert(memcmp(cfg->key, empty, sizeof(cfg->key)) != 0);
-	/* make sure config.uid is NOT zero for 160 bits config */
-	assert(memcmp(cfg->uid, empty, sizeof(cfg->uid)) != 0);
+	size_t i;
+	for(i = 0; i < sizeof(supported) / sizeof(struct versions); i++) {
+		int rc;
+		OK_STATUS *st = _test_init_st(supported[i].major, supported[i].minor, supported[i].build);
+		printf("testing: %d.%d.%d\n", supported[i].major, supported[i].minor, supported[i].build);
+		rc = ok_check_firmware_version2(st);
+		if(supported[i].support == true) {
+			assert(rc == 1);
+		} else {
+			assert(ok_errno == OK_EFIRMWARE);
+			assert(rc == 0);
+		}
+		okds_free(st);
+	}
 }
 
-int main (void)
+int main(void)
 {
-	OKP_CONFIG *okp;
-	struct config_st *ycfg;
-	int rc;
-
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
-
-	ycfg = (struct config_st *) okp_core_config(okp);
-
-	_test_128_bits_key(okp, ycfg);
-	_test_160_bits_key(okp, ycfg);
-
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
+	_test_ok_firmware();
 
 	return 0;
 }
+

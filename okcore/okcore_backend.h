@@ -1,6 +1,7 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Written by Richard Levitte <richar@levitte.org>
+ * Copyright (c) 2008-2014 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +29,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef	__OKCORE_BACKEND_H_INCLUDED__
+#define	__OKCORE_BACKEND_H_INCLUDED__
 
-int main (void)
-{
-	OKP_CONFIG *okp;
-	int rc;
+#define	FEATURE_RPT_SIZE		8
 
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
-	}
+#define	REPORT_TYPE_FEATURE		0x03
 
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
+int _okusb_start(void);
+int _okusb_stop(void);
 
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
+void * _okusb_open_device(int vendor_id, int *product_ids, size_t pids_len, int index);
+int _okusb_close_device(void *);
 
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
+int _okusb_read(void *dev, int report_type, int report_number,
+		char *buffer, int buffer_size);
+int _okusb_write(void *dev, int report_type, int report_number,
+		 char *buffer, int buffer_size);
 
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
+int _okusb_get_vid_pid(void *dev, int *vid, int *pid);
 
-	return 0;
-}
+const char *_okusb_strerror(void);
+
+#endif	/* __OKCORE_BACKEND_H_INCLUDED__ */

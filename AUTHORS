@@ -13,7 +13,7 @@ Patches
 -------
 
 Lester Hightower, 10East" <lester.hightower@gmail.com>
-Added ykp_AES_key_from_hex and ykpersonalize -a parameter.
+Added okp_AES_key_from_hex and okpersonalize -a parameter.
 
 Christer Kaivo-oja <christer.kaivooja@gmail.com>
 Mac OS X port.

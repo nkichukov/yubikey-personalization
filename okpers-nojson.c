@@ -1,6 +1,6 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Copyright (c) 2013 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +28,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
+#include "okpers_lcl.h"
+#include "okpers-json.h"
+
+#include <yubikey.h>
+
 #include <string.h>
 
-int main (void)
-{
-	OKP_CONFIG *okp;
-	int rc;
-
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
-	}
-
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
-
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
-
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
-
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
-
+int _okp_json_export_cfg(const OKP_CONFIG *cfg, char *json, size_t len) {
+	okp_errno = OKP_EINVAL;
 	return 0;
 }
+
+int _okp_json_import_cfg(OKP_CONFIG *cfg, const char *json, size_t len) {
+	okp_errno = OKP_EINVAL;
+	return 0;
+}
+

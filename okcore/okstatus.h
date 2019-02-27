@@ -1,6 +1,7 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Written by Richard Levitte <richard@levitte.org>
+ * Copyright (c) 2008-2013 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +29,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef	__OKSTATUS_H_INCLUDED__
+#define	__OKSTATUS_H_INCLUDED__
 
-int main (void)
-{
-	OKP_CONFIG *okp;
-	int rc;
+#include <okcore.h>
 
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
-	}
+# ifdef __cplusplus
+extern "C" {
+# endif
 
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
+/* Allocate and free status structures */
+extern OK_STATUS *okds_alloc(void);
+extern void okds_free(OK_STATUS *st);
 
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
+/* Return static status structure, to be used for quick checks.
+   USE WITH CAUTION, as this is a SHARED OBJECT. */
+extern OK_STATUS *okds_static(void);
 
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
+/* Accessor functions */
+extern int okds_version_major(const OK_STATUS *st);
+extern int okds_version_minor(const OK_STATUS *st);
+extern int okds_version_build(const OK_STATUS *st);
+extern int okds_pgm_seq(const OK_STATUS *st);
+extern int okds_touch_level(const OK_STATUS *st);
 
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
-
-	return 0;
+# ifdef __cplusplus
 }
+# endif
+
+#endif /* __OKSTATUS_H_INCLUDED__ */

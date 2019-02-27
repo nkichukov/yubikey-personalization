@@ -25,7 +25,7 @@ was needed.  This is now fixed in the main distribution, since version 1.4.0.
 Real Solution 2
 ---------------
 
-Install libusb-1.0 and re-build ykpersonalize, and make sure it is
+Install libusb-1.0 and re-build okpersonalize, and make sure it is
 using the "libusb-1.0" backend rather than the "libusb" backend.
 
 This backend has been added recently, but appears to solve the problem

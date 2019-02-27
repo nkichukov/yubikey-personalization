@@ -1,6 +1,6 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Copyright (c) 2008-2014 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +28,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef OKPERS_ARGS_H
+#define OKPERS_ARGS_H
 
-int main (void)
-{
-	OKP_CONFIG *okp;
-	int rc;
+#include "okpers.h"
 
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
-	}
+const char *usage;
+const char *optstring;
 
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
+int args_to_config(int argc, char **argv, OKP_CONFIG *cfg, char *oathid,
+		   size_t oathid_len, const char **infname,
+		   const char **outfname, int *data_format, bool *autocommit,
+		   OK_STATUS *st, bool *verbose, bool *dry_run,
+		   char **access_code, char **new_access_code,
+		   char *ndef_type, char *ndef, size_t ndef_len,
+		   unsigned char *usb_mode, bool *zap,
+		   unsigned char *scan_bin, unsigned char *cr_timeout,
+		   unsigned short *autoeject_timeout, int *num_modes_seen,
+		   unsigned char *device_info, size_t *device_info_len,
+		   int *exit_code);
 
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
+int set_oath_id(char *opt, OKP_CONFIG *cfg, OK_KEY *ok, OK_STATUS *st);
 
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
+void report_ok_error(void);
 
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
+int hex_modhex_decode(unsigned char *result, size_t *resultlen,
+    const char *str, size_t strl,
+    size_t minsize, size_t maxsize,
+    bool primarily_modhex);
 
-	return 0;
-}
+
+#endif

@@ -1,0 +1,241 @@
+/* -*- mode:C; c-file-style: "bsd" -*- */
+/*
+ * Copyright (c) 2008-2014 Yubico AB
+ * Copyright (c) 2009 Christer Kaivo-oja <christer.kaivooja@gmail.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "okcore.h"
+#include "okdef.h"
+#include "okcore_backend.h"
+
+#include <IOKit/hid/IOHIDLib.h>
+#include <IOKit/hid/IOHIDKeys.h>
+#include <CoreFoundation/CoreFoundation.h>
+
+#include "okcore_backend.h"
+
+#define	FEATURE_RPT_SIZE		8
+
+static IOHIDManagerRef okosxManager = NULL;
+static IOReturn _okusb_IOReturn = 0;
+
+int _okusb_start(void)
+{
+	okosxManager = IOHIDManagerCreate( kCFAllocatorDefault, 0L );
+
+	return 1;
+}
+
+int _okusb_stop(void)
+{
+	if (okosxManager != NULL) {
+		CFRelease(okosxManager);
+		okosxManager = NULL;
+		return 1;
+	}
+
+	ok_errno = OK_EUSBERR;
+	return 0;
+}
+
+static void _okosx_CopyToCFArray(const void *value, void *context)
+{
+	CFArrayAppendValue( ( CFMutableArrayRef ) context, value );
+}
+
+static int _okosx_getIntProperty( IOHIDDeviceRef dev, CFStringRef key ) {
+	int result = 0;
+	CFTypeRef tCFTypeRef = IOHIDDeviceGetProperty( dev, key );
+	if ( tCFTypeRef ) {
+		if ( CFNumberGetTypeID( ) == CFGetTypeID( tCFTypeRef ) ) {
+			CFNumberGetValue( ( CFNumberRef ) tCFTypeRef, kCFNumberSInt32Type, &result );
+		}
+	}
+	return result;
+}
+
+void *_okusb_open_device(int vendor_id, int *product_ids, size_t pids_len, int index)
+{
+	void *ok = NULL;
+
+	int rc = OK_ENOKEY;
+
+	size_t i;
+	int found = 0;
+
+	IOHIDManagerSetDeviceMatchingMultiple( okosxManager, NULL );
+
+	CFSetRef devSet = IOHIDManagerCopyDevices( okosxManager );
+
+	if ( devSet ) {
+		CFMutableArrayRef array = CFArrayCreateMutable( kCFAllocatorDefault, 0, NULL );
+
+		CFSetApplyFunction( devSet, _okosx_CopyToCFArray, array );
+
+		CFIndex cnt = CFArrayGetCount( array );
+
+		CFIndex i;
+
+		for(i = 0; i < cnt; i++) {
+			IOHIDDeviceRef dev = (IOHIDDeviceRef)CFArrayGetValueAtIndex( array, i );
+			long usagePage = _okosx_getIntProperty( dev, CFSTR( kIOHIDPrimaryUsagePageKey ));
+			long usage = _okosx_getIntProperty( dev, CFSTR( kIOHIDPrimaryUsageKey ));
+			long devVendorId = _okosx_getIntProperty( dev, CFSTR( kIOHIDVendorIDKey ));
+			/* usagePage 1 is generic desktop and usage 6 is keyboard */
+			if(usagePage == 1 && usage == 6 && devVendorId == vendor_id) {
+				long devProductId = _okosx_getIntProperty( dev, CFSTR( kIOHIDProductIDKey ));
+				size_t j;
+				for(j = 0; j < pids_len; j++) {
+					if(product_ids[j] == devProductId) {
+						found++;
+						if(found-1 == index) {
+							ok = dev;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		/* this is a workaround for a memory leak in IOHIDManagerCopyDevices() in 10.8 */
+		IOHIDManagerScheduleWithRunLoop( okosxManager, CFRunLoopGetCurrent( ), kCFRunLoopDefaultMode );
+		IOHIDManagerUnscheduleFromRunLoop( okosxManager, CFRunLoopGetCurrent( ), kCFRunLoopDefaultMode );
+
+		CFRelease( array );
+		CFRelease( devSet );
+	}
+
+	if (ok) {
+		CFRetain(ok);
+		_okusb_IOReturn = IOHIDDeviceOpen( ok, 0L );
+
+		if ( _okusb_IOReturn != kIOReturnSuccess ) {
+			CFRelease(ok);
+			rc = OK_EUSBERR;
+			goto error;
+		}
+
+		return ok;
+	}
+
+error:
+	ok_errno = rc;
+	return 0;
+}
+
+int _okusb_close_device(void *dev)
+{
+	_okusb_IOReturn = IOHIDDeviceClose( dev, 0L );
+	CFRelease(dev);
+
+	if ( _okusb_IOReturn == kIOReturnSuccess )
+		return 1;
+
+	ok_errno = OK_EUSBERR;
+	return 0;
+}
+
+int _okusb_read(void *dev, int report_type, int report_number,
+		char *buffer, int size)
+{
+	CFIndex sizecf = (CFIndex)size;
+
+	if (report_type != REPORT_TYPE_FEATURE)
+	{
+		ok_errno = OK_ENOTYETIMPL;
+		return 0;
+	}
+
+	_okusb_IOReturn = IOHIDDeviceGetReport( dev, kIOHIDReportTypeFeature, report_number, (uint8_t *)buffer, (CFIndex *) &sizecf );
+
+	if ( _okusb_IOReturn != kIOReturnSuccess )
+	{
+		ok_errno = OK_EUSBERR;
+		return 0;
+	}
+
+	if(sizecf == 0)
+		ok_errno = OK_ENODATA;
+
+	return (int)sizecf;
+}
+
+int _okusb_write(void *dev, int report_type, int report_number,
+		char *buffer, int size)
+{
+	if (report_type != REPORT_TYPE_FEATURE)
+	{
+		ok_errno = OK_ENOTYETIMPL;
+		return 0;
+	}
+
+	_okusb_IOReturn = IOHIDDeviceSetReport( dev, kIOHIDReportTypeFeature, report_number, (unsigned char *)buffer, size);
+
+	if ( _okusb_IOReturn != kIOReturnSuccess )
+	{
+		ok_errno = OK_EUSBERR;
+		return 0;
+	}
+
+	return 1;
+}
+
+int _okusb_get_vid_pid(void *ok, int *vid, int *pid) {
+	IOHIDDeviceRef dev = (IOHIDDeviceRef)ok;
+	*vid = _okosx_getIntProperty( dev, CFSTR( kIOHIDVendorIDKey ));
+	*pid = _okosx_getIntProperty( dev, CFSTR( kIOHIDProductIDKey ));
+	return 1;
+}
+
+const char *_okusb_strerror()
+{
+	switch (_okusb_IOReturn) {
+		case kIOReturnSuccess:
+			return "kIOReturnSuccess";
+		case kIOReturnNotOpen:
+			return "kIOReturnNotOpen";
+		case kIOReturnNoDevice:
+			return "kIOReturnNoDevice";
+		case kIOReturnExclusiveAccess:
+			return "kIOReturnExclusiveAccess";
+		case kIOReturnError:
+			return "kIOReturnError";
+		case kIOReturnBadArgument:
+			return "kIOReturnBadArgument";
+		case kIOReturnAborted:
+			return "kIOReturnAborted";
+		case kIOReturnNotResponding:
+			return "kIOReturnNotResponding";
+		case kIOReturnOverrun:
+			return "kIOReturnOverrun";
+		case kIOReturnCannotWire:
+			return "kIOReturnCannotWire";
+		default:
+			return "unknown error";
+	}
+}

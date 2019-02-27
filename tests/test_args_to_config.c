@@ -37,25 +37,25 @@
 #include <stdlib.h>
 
 #include <yubikey.h>
-#include <ykpers.h>
-#include <ykdef.h>
+#include <okpers.h>
+#include <okdef.h>
 /*
-#include <ykcore.h>
-#include <ykcore_lcl.h>
+#include <okcore.h>
+#include <okcore_lcl.h>
 */
-#include <ykpers-args.h>
+#include <okpers-args.h>
 
-/* duplicated from ykpers.c */
-struct ykp_config_t {
-	unsigned int yk_major_version;
-	unsigned int yk_minor_version;
-	unsigned int yk_build_version;
+/* duplicated from okpers.c */
+struct okp_config_t {
+	unsigned int ok_major_version;
+	unsigned int ok_minor_version;
+	unsigned int ok_build_version;
 	unsigned int command;
 
-	struct config_st *ykcore_config;
+	struct config_st *okcore_config;
 };
 
-static void _yktest_hexdump(const char *prefix, const void *buffer, int size, int break_on)
+static void _oktest_hexdump(const char *prefix, const void *buffer, int size, int break_on)
 {
 	unsigned const char *p = buffer;
 	int i;
@@ -74,33 +74,33 @@ static void _yktest_hexdump(const char *prefix, const void *buffer, int size, in
 	fflush(stderr);
 }
 
-static void _check_success(int rc, YKP_CONFIG *cfg, unsigned char expected[], int caller_line)
+static void _check_success(int rc, OKP_CONFIG *cfg, unsigned char expected[], int caller_line)
 {
 	struct config_st *ycfg;
 	bool config_matches_expected = false;
 
 	if (rc != 1) {
 		fprintf(stderr, "TEST FAILED (line %i of %s)\n", caller_line, __FILE__);
-		fprintf(stderr, "Error returned : %i/%i (%s)\n", rc, ykp_errno, ykp_strerror(ykp_errno));
+		fprintf(stderr, "Error returned : %i/%i (%s)\n", rc, okp_errno, okp_strerror(okp_errno));
 	}
 	assert(rc == 1);
 
-	ycfg = (struct config_st *) ykp_core_config(cfg);
+	ycfg = (struct config_st *) okp_core_config(cfg);
 	/* insert CRC */
 	ycfg->crc = ~yubikey_crc16 ((unsigned char *) ycfg,
 				    offsetof(struct config_st, crc));
-	ycfg->crc = yk_endian_swap_16(ycfg->crc);
+	ycfg->crc = ok_endian_swap_16(ycfg->crc);
 
 	config_matches_expected = ! memcmp(expected, ycfg, sizeof(*ycfg));
 	if (! config_matches_expected) {
 		fprintf(stderr, "TEST FAILED (line %i of %s)\n", caller_line, __FILE__);
-		_yktest_hexdump ("BAD MATCH :\n", ycfg, sizeof(*ycfg), 7);
-		_yktest_hexdump ("EXPECTED :\n", expected, sizeof(*ycfg), 7);
+		_oktest_hexdump ("BAD MATCH :\n", ycfg, sizeof(*ycfg), 7);
+		_oktest_hexdump ("EXPECTED :\n", expected, sizeof(*ycfg), 7);
 	}
 	assert(config_matches_expected == true);
 }
 
-static int _test_config (YKP_CONFIG *cfg, YK_STATUS *st, int argc, char **argv)
+static int _test_config (OKP_CONFIG *cfg, OK_STATUS *st, int argc, char **argv)
 {
 	const char *infname = NULL;
 	const char *outfname = NULL;
@@ -111,7 +111,7 @@ static int _test_config (YKP_CONFIG *cfg, YK_STATUS *st, int argc, char **argv)
 	char *new_access_code = NULL;
 	bool autocommit = false;
 	int exit_code = 0;
-	int data_format = YKP_FORMAT_LEGACY;
+	int data_format = OKP_FORMAT_LEGACY;
 
 	/* Options */
 	char oathid[128] = {0};
@@ -129,7 +129,7 @@ static int _test_config (YKP_CONFIG *cfg, YK_STATUS *st, int argc, char **argv)
 
 	int rc;
 
-	ykp_errno = 0;
+	okp_errno = 0;
 
 /* getopt reinit (BSD systems use optreset and a different optind value) */
 #if defined __FreeBSD__ || defined __OpenBSD__ || defined __NetBSD__ || defined __APPLE__
@@ -139,9 +139,9 @@ static int _test_config (YKP_CONFIG *cfg, YK_STATUS *st, int argc, char **argv)
 #endif
 
 	/* copy version number from st into cfg */
-	assert(ykp_configure_for(cfg, 1, st) == 1);
+	assert(okp_configure_for(cfg, 1, st) == 1);
 
-	/* call args_to_config from ykpers-args.c with a fake set of program arguments */
+	/* call args_to_config from okpers-args.c with a fake set of program arguments */
 	rc = args_to_config(argc, argv, cfg, oathid, sizeof(oathid),
 			    &infname, &outfname,
 			    &data_format, &autocommit,
@@ -156,9 +156,9 @@ static int _test_config (YKP_CONFIG *cfg, YK_STATUS *st, int argc, char **argv)
 	return rc;
 }
 
-static YK_STATUS * _test_init_st(int major, int minor, int build)
+static OK_STATUS * _test_init_st(int major, int minor, int build)
 {
-	YK_STATUS *st = ykds_alloc();
+	OK_STATUS *st = okds_alloc();
 	struct status_st *t;
 
 	t = (struct status_st *) st;
@@ -177,13 +177,13 @@ static YK_STATUS * _test_init_st(int major, int minor, int build)
  */
 static int _parse_args_rc(int argc, char *argv[])
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 2, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 2, 0);
 	int rc = 0;
 
 	rc = _test_config(cfg, st, argc, argv);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 
 	return rc;
@@ -191,8 +191,8 @@ static int _parse_args_rc(int argc, char *argv[])
 
 static void _test_config_slot1(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(1, 3, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(1, 3, 0);
 	int rc = 0;
 
 	unsigned char expected[] = {
@@ -215,14 +215,14 @@ static void _test_config_slot1(void)
 	rc = _test_config(cfg, st, argc, argv);
 	_check_success(rc, cfg, expected, __LINE__);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_config_static_slot2(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 0, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 0, 0);
 	int rc = 0;
 
 	unsigned char expected[] = {
@@ -245,14 +245,14 @@ static void _test_config_static_slot2(void)
 	rc = _test_config(cfg, st, argc, argv);
 	_check_success(rc, cfg, expected, __LINE__);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_too_old_key(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(1, 3, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(1, 3, 0);
 	int rc = 0;
 
 	char *argv[] = {
@@ -263,16 +263,16 @@ static void _test_too_old_key(void)
 
 	rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 0);
-	assert(ykp_errno == YKP_EYUBIKEYVER);
+	assert(okp_errno == OKP_EYUBIKEYVER);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_too_new_key(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 2, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 2, 0);
 	int rc = 0;
 
 	char *argv[] = {
@@ -283,16 +283,16 @@ static void _test_too_new_key(void)
 
 	rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 0);
-	assert(ykp_errno == YKP_EYUBIKEYVER);
+	assert(okp_errno == OKP_EYUBIKEYVER);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_non_config_args(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 2, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 2, 0);
 	int rc = 0;
 
 	const char *infname = NULL;
@@ -304,7 +304,7 @@ static void _test_non_config_args(void)
 	bool autocommit = false;
 	int exit_code = 0;
 	int i;
-	int data_format = YKP_FORMAT_LEGACY;
+	int data_format = OKP_FORMAT_LEGACY;
 
 	/* Options */
 	char oathid[128] = {0};
@@ -326,7 +326,7 @@ static void _test_non_config_args(void)
 	};
 	int argc = 7;
 
-	ykp_errno = 0;
+	okp_errno = 0;
 
 /* getopt reinit (BSD systems use optreset and a different optind value) */
 #if defined __FreeBSD__ || defined __OpenBSD__ || defined __NetBSD__ || defined __APPLE__
@@ -336,10 +336,10 @@ static void _test_non_config_args(void)
 #endif
 
 	/* copy version number from st into cfg */
-  ykp_configure_version(cfg, st);
-	//assert(ykp_configure_for(cfg, 1, st) == 1);
+  okp_configure_version(cfg, st);
+	//assert(okp_configure_for(cfg, 1, st) == 1);
 
-	/* call args_to_config from ykpers-args.c with a fake set of program arguments */
+	/* call args_to_config from okpers-args.c with a fake set of program arguments */
 	rc = args_to_config(argc, argv, cfg, oathid, sizeof(oathid),
 			    &infname, &outfname,
 			    &data_format, &autocommit,
@@ -355,7 +355,7 @@ static void _test_non_config_args(void)
 	assert(autocommit == true);
 	assert(verbose == true);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 	free(access_code);
 	free(new_access_code);
@@ -363,8 +363,8 @@ static void _test_non_config_args(void)
 
 static void _test_oath_hotp_nist_160_bits(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 1, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 1, 0);
 	int rc = 0;
 
 	unsigned char expected[] = {
@@ -387,14 +387,14 @@ static void _test_oath_hotp_nist_160_bits(void)
 	rc = _test_config(cfg, st, argc, argv);
 	_check_success(rc, cfg, expected, __LINE__);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_extended_flags1(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 2, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 2, 0);
 	int rc = 0;
 
 	/* this matches the python-yubico test case test_challenge_response_hmac_nist */
@@ -421,7 +421,7 @@ static void _test_extended_flags1(void)
 	rc = _test_config(cfg, st, argc, argv);
 	_check_success(rc, cfg, expected, __LINE__);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
@@ -550,8 +550,8 @@ static void _test_swap_with_update(void)
 
 static void _test_ndef_for_neo_beta(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 1, 7);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 1, 7);
 
 	char *argv[] = {
 		"unittest", "-nhttps://my.yubico.com/neo/",
@@ -561,16 +561,16 @@ static void _test_ndef_for_neo_beta(void)
 
 	int rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 1);
-	assert(((struct ykp_config_t*)cfg)->command == SLOT_NDEF);
+	assert(((struct okp_config_t*)cfg)->command == SLOT_NDEF);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_ndef_with_non_neo(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 2, 4);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 2, 4);
 
 	char *argv[] = {
 		"unittest", "-nhttps://my.yubico.com/neo/",
@@ -581,14 +581,14 @@ static void _test_ndef_with_non_neo(void)
 	int rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 0);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_slot_two_with_neo_beta(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 1, 7);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 1, 7);
 
 	char *argv[] = {
 		"unittest", "-2", NULL
@@ -597,14 +597,14 @@ static void _test_slot_two_with_neo_beta(void)
 
 	int rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 0);
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_ndef2_with_neo_beta(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(2, 1, 7);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(2, 1, 7);
 
 	char *argv[] = {
 		"unittest", "-2", "-nhttps://my.yubico.com/neo/",
@@ -614,14 +614,14 @@ static void _test_ndef2_with_neo_beta(void)
 
 	int rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 0);
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_ndef2_with_neo(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(3, 0, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(3, 0, 0);
 
 	char *argv[] = {
 		"unittest", "-2", "-nhttps://my.yubico.com/neo/",
@@ -631,16 +631,16 @@ static void _test_ndef2_with_neo(void)
 
 	int rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 1);
-	assert(((struct ykp_config_t*)cfg)->command == SLOT_NDEF2);
+	assert(((struct okp_config_t*)cfg)->command == SLOT_NDEF2);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 
 static void _test_scanmap_no_config(void)
 {
-	YKP_CONFIG *cfg = ykp_alloc();
-	YK_STATUS *st = _test_init_st(4, 3, 0);
+	OKP_CONFIG *cfg = okp_alloc();
+	OK_STATUS *st = _test_init_st(4, 3, 0);
 
 	char *argv[] = {
 		"unittest", "-S", NULL
@@ -649,9 +649,9 @@ static void _test_scanmap_no_config(void)
 
 	int rc = _test_config(cfg, st, argc, argv);
 	assert(rc == 1);
-	assert(((struct ykp_config_t*)cfg)->command == SLOT_SCAN_MAP);
+	assert(((struct okp_config_t*)cfg)->command == SLOT_SCAN_MAP);
 
-	ykp_free_config(cfg);
+	okp_free_config(cfg);
 	free(st);
 }
 

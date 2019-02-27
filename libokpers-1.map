@@ -1,0 +1,281 @@
+# Written by Simon Josefsson <simon@yubico.com>.
+# Copyright (c) 2008-2014 Yubico AB
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+# 
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+# 
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+LIBOKPERS_1.0 {
+  global:
+# Functions:
+    ok_check_firmware_version;
+    ok_close_key;
+    ok_endian_swap_16;
+    ok_force_key_update;
+    ok_get_status;
+    ok_init;
+    ok_open_first_key;
+    ok_pbkdf2;
+    ok_read_from_key;
+    ok_release;
+    ok_strerror;
+    ok_usb_strerror;
+    ok_write_config;
+    ok_write_to_key;
+    okds_alloc;
+    okds_free;
+    okds_pgm_seq;
+    okds_static;
+    okds_touch_level;
+    okds_version_build;
+    okds_version_major;
+    okds_version_minor;
+    okp_AES_key_from_hex;
+    okp_AES_key_from_passphrase;
+    okp_config_num;
+    okp_configure_for;
+    okp_core_config;
+    okp_create_config;
+    okp_free_config;
+    okp_read_config;
+    okp_set_access_code;
+    okp_set_cfgflag_ALLOW_HIDTRIG;
+    okp_set_cfgflag_MAN_UPDATE;
+    okp_set_cfgflag_PACING_10MS;
+    okp_set_cfgflag_PACING_20MS;
+    okp_set_cfgflag_SEND_REF;
+    okp_set_cfgflag_SHORT_TICKET;
+    okp_set_cfgflag_STATIC_TICKET;
+    okp_set_cfgflag_STRONG_PW1;
+    okp_set_cfgflag_STRONG_PW2;
+    okp_set_cfgflag_TICKET_FIRST;
+    okp_set_cfgflag_OATH_HOTP8;
+    okp_set_cfgflag_OATH_FIXED_MODHEX1;
+    okp_set_cfgflag_OATH_FIXED_MODHEX2;
+    okp_set_cfgflag_OATH_FIXED_MODHEX;
+    okp_set_fixed;
+    okp_set_tktflag_APPEND_CR;
+    okp_set_tktflag_APPEND_DELAY1;
+    okp_set_tktflag_APPEND_DELAY2;
+    okp_set_tktflag_APPEND_TAB1;
+    okp_set_tktflag_APPEND_TAB2;
+    okp_set_tktflag_PROTECT_CFG2;
+    okp_set_tktflag_TAB_FIRST;
+    okp_set_tktflag_OATH_HOTP;
+    okp_set_uid;
+    okp_strerror;
+    okp_write_config;
+
+# Variables:
+   _ok_errno_location;
+   _okp_errno_location;
+
+  local:
+    *;
+};
+
+LIBOKPERS_1.4 {
+  global:
+# Functions:
+    okp_HMAC_key_from_hex;
+    okp_set_tktflag_CHAL_RESP;
+    okp_set_cfgflag_CHAL_YUBICO;
+    okp_set_cfgflag_CHAL_HMAC;
+    okp_set_cfgflag_HMAC_LT64;
+    okp_set_cfgflag_CHAL_BTN_TRIG;
+    okp_set_extflag_SERIAL_BTN_VISIBLE;
+    okp_set_extflag_SERIAL_USB_VISIBLE;
+    okp_set_extflag_SERIAL_API_VISIBLE;
+# Variables:
+} LIBOKPERS_1.0;
+
+LIBOKPERS_1.5 {
+  global:
+# Functions:
+  ok_wait_for_key_status;
+  ok_read_response_from_key;
+  ok_get_serial;
+# Variables:
+} LIBOKPERS_1.4;
+
+LIBOKPERS_1.6 {
+  global:
+# Functions:
+  okp_set_oath_imf;
+  okp_get_oath_imf;
+# Variables:
+} LIBOKPERS_1.5;
+
+LIBOKPERS_1.7 {
+  global:
+# Functions:
+  okp_alloc;
+  okp_configure_version;
+  okp_command;
+  okp_configure_command;
+  ok_write_command;
+  okp_set_extflag_USE_NUMERIC_KEYPAD;
+  okp_set_extflag_FAST_TRIG;
+  okp_set_extflag_ALLOW_UPDATE;
+  okp_set_extflag_DORMANT;
+  ok_write_ndef;
+  okp_construct_ndef_uri;
+  okp_construct_ndef_text;
+# Variables:
+} LIBOKPERS_1.6;
+
+LIBOKPERS_1.8 {
+  global:
+# Functions:
+  ok_challenge_response;
+  okp_set_ndef_access_code;
+  okp_alloc_ndef;
+  okp_free_ndef;
+# Variables:
+} LIBOKPERS_1.7;
+
+LIBOKPERS_1.9 {
+  global:
+# Functions:
+  ok_hmac_sha1;
+# Variables:
+} LIBOKPERS_1.8;
+
+LIBOKPERS_1.10 {
+  global:
+# Functions:
+  ok_write_ndef2;
+  okp_ndef_as_text;
+  ok_check_firmware_version2;
+  ok_write_device_config;
+  okp_alloc_device_config;
+  okp_free_device_config;
+  okp_set_device_mode;
+  okp_set_device_chalresp_timeout;
+  okp_set_device_autoeject_time;
+  ok_write_scan_map;
+# Variables:
+} LIBOKPERS_1.9;
+
+LIBOKPERS_1.11 {
+  global:
+  okpers_check_version;
+# Variables:
+} LIBOKPERS_1.10;
+
+LIBOKPERS_1.12 {
+  global:
+# Functions:
+  okp_set_extflag_LED_INV;
+# Variables:
+} LIBOKPERS_1.11;
+
+LIBOKPERS_1.13 {
+  global:
+# Functions:
+  okp_export_config;
+  okp_import_config;
+# Variables:
+} LIBOKPERS_1.12;
+
+LIBOKPERS_1.14 {
+  global:
+# Functions:
+  okp_get_cfgflag_ALLOW_HIDTRIG;
+  okp_get_cfgflag_MAN_UPDATE;
+  okp_get_cfgflag_PACING_10MS;
+  okp_get_cfgflag_PACING_20MS;
+  okp_get_cfgflag_SEND_REF;
+  okp_get_cfgflag_SHORT_TICKET;
+  okp_get_cfgflag_STATIC_TICKET;
+  okp_get_cfgflag_STRONG_PW1;
+  okp_get_cfgflag_STRONG_PW2;
+  okp_get_cfgflag_TICKET_FIRST;
+  okp_get_cfgflag_OATH_HOTP8;
+  okp_get_cfgflag_OATH_FIXED_MODHEX1;
+  okp_get_cfgflag_OATH_FIXED_MODHEX2;
+  okp_get_cfgflag_OATH_FIXED_MODHEX;
+  okp_get_tktflag_APPEND_CR;
+  okp_get_tktflag_APPEND_DELAY1;
+  okp_get_tktflag_APPEND_DELAY2;
+  okp_get_tktflag_APPEND_TAB1;
+  okp_get_tktflag_APPEND_TAB2;
+  okp_get_tktflag_PROTECT_CFG2;
+  okp_get_tktflag_TAB_FIRST;
+  okp_get_tktflag_OATH_HOTP;
+  okp_get_tktflag_CHAL_RESP;
+  okp_get_cfgflag_CHAL_YUBICO;
+  okp_get_cfgflag_CHAL_HMAC;
+  okp_get_cfgflag_HMAC_LT64;
+  okp_get_cfgflag_CHAL_BTN_TRIG;
+  okp_get_extflag_SERIAL_BTN_VISIBLE;
+  okp_get_extflag_SERIAL_USB_VISIBLE;
+  okp_get_extflag_SERIAL_API_VISIBLE;
+  okp_get_extflag_USE_NUMERIC_KEYPAD;
+  okp_get_extflag_FAST_TRIG;
+  okp_get_extflag_ALLOW_UPDATE;
+  okp_get_extflag_DORMANT;
+  okp_get_extflag_LED_INV;
+  okp_clear_config;
+  okp_set_acccode_type;
+  okp_get_acccode_type;
+# Variables:
+} LIBOKPERS_1.13;
+
+LIBOKPERS_1.15 {
+  global:
+# Functions:
+  okp_get_supported_key_length;
+  okp_AES_key_from_raw;
+  okp_HMAC_key_from_raw;
+# Variables:
+} LIBOKPERS_1.14;
+
+LIBOKPERS_1.16 {
+  global:
+# Functions:
+  ok_get_key_vid_pid;
+# Variables:
+} LIBOKPERS_1.15;
+
+LIBOKPERS_1.17 {
+  global:
+# Functions:
+  ok_get_capabilities;
+# Variables:
+} LIBOKPERS_1.16;
+
+LIBOKPERS_1.18 {
+  global:
+# Functions:
+  ok_open_key;
+# Variables:
+} LIBOKPERS_1.17;
+
+LIBOKPERS_1.19 {
+  global:
+# Functions:
+  ok_write_device_info;
+# Variables:
+} LIBOKPERS_1.18;

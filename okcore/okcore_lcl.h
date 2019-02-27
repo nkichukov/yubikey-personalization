@@ -1,6 +1,6 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Copyright (c) 2008-2012 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +28,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef	__OKCORE_LCL_H_INCLUDED__
+#define	__OKCORE_LCL_H_INCLUDED__
 
-int main (void)
-{
-	OKP_CONFIG *okp;
-	int rc;
+/* This is a hack to map official structure names (in okcore.h) to
+   internal ones (in okdef.h) */
+#define ok_key_st yubikey_st
+#define ok_status_st status_st
+#define ok_ticket_st ticket_st
+#define ok_config_st config_st
+#define ok_nav_st nav_st
+#define ok_frame_st frame_st
+#define ok_device_config_st device_config_st
 
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
-	}
+#include "okcore.h"
+#include "okdef.h"
 
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
+/*************************************************************************
+ **
+ ** = = = = = = = = =   B I G   F A T   W A R N I N G   = = = = = = = = =
+ **
+ ** DO NOT USE THE FOLLOWING FUCTIONS DIRECTLY UNLESS YOU WRITE CORE ROUTINES!
+ **
+ ** These functions are declared here only to make sure they get defined
+ ** correctly internally.
+ **
+ ** YOU HAVE BEEN WARNED!
+ **
+ ****/
 
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
+/*************************************************************************
+ *
+ * Functions to send and receive data to/from the key.
+ *
+ ****/
+extern int ok_read_from_key(OK_KEY *k, uint8_t slot,
+			    void *buf, unsigned int bufsize,
+			    unsigned int *bufcount);
 
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
-
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
-
-	return 0;
-}
+#endif	/* __OKCORE_LCL_H_INCLUDED__ */

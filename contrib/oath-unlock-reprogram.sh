@@ -59,10 +59,10 @@ when=`date +%Y-%m-%dT%H:%M:%S`
 
 while sleep 1; do
     # Read serial number.
-    serialno=`ykinfo -s -q 2> /dev/null`
+    serialno=`okinfo -s -q 2> /dev/null`
     rc=$?
     if test "$rc" != "0"; then
-	# ykinfo already printed an error message
+	# okinfo already printed an error message
 	continue
     fi
 
@@ -88,7 +88,7 @@ while sleep 1; do
 
     echo "notice: Using secret $secret unlock code $new_unlock and seed $seed..."
 
-    ykpersonalize -1 -a$secret -c$old_unlock -ooath-hotp -oappend-cr -oaccess=$new_unlock -ooath-imf=$seed -oprotect-cfg2 -oserial-api-visible -y
+    okpersonalize -1 -a$secret -c$old_unlock -ooath-hotp -oappend-cr -oaccess=$new_unlock -ooath-imf=$seed -oprotect-cfg2 -oserial-api-visible -y
 
     echo "$serialno,,$seed,$secret,$new_unlock,$when," >> $NEWCSVFILE
 

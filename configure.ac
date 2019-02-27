@@ -1,19 +1,19 @@
 # Written by Richard Levitte <richard@levitte.org>.
 # Copyright (c) 2008-2016 Yubico AB
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #     * Redistributions of source code must retain the above copyright
 #       notice, this list of conditions and the following disclaimer.
-# 
+#
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
 #       disclaimer in the documentation and/or other materials provided
 #       with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -27,7 +27,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_INIT([yubikey-personalization], [1.19.4],
-  [yubico-devel@googlegroups.com], [ykpers],
+  [yubico-devel@googlegroups.com], [okpers],
   [https://developers.yubico.com/yubikey-personalization/])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -78,7 +78,7 @@ if test "x$with_backend" = xcheck; then
    case "$host" in
     *-darwin*) with_backend=osx ;;
     *-mingw*) with_backend=windows ;;
-    *) PKG_CHECK_EXISTS([libusb-1.0], 
+    *) PKG_CHECK_EXISTS([libusb-1.0],
        			   [with_backend=libusb-1.0],
 			   [with_backend=libusb])
   esac
@@ -226,23 +226,23 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-fdiagnostics-show-option])
 fi
 
-AC_SUBST(YKPERS_VERSION_MAJOR, `echo $PACKAGE_VERSION | sed 's/\(.*\)\..*\..*/\1/g'`)
-AC_SUBST(YKPERS_VERSION_MINOR, `echo $PACKAGE_VERSION | sed 's/.*\.\(.*\)\..*/\1/g'`)
-AC_SUBST(YKPERS_VERSION_PATCH, `echo $PACKAGE_VERSION | sed 's/.*\..*\.\(.*\)/\1/g'`)
-AC_SUBST(YKPERS_VERSION_NUMBER, `printf "0x%02x%02x%02x" $YKPERS_VERSION_MAJOR $YKPERS_VERSION_MINOR $YKPERS_VERSION_PATCH`)
+AC_SUBST(OKPERS_VERSION_MAJOR, `echo $PACKAGE_VERSION | sed 's/\(.*\)\..*\..*/\1/g'`)
+AC_SUBST(OKPERS_VERSION_MINOR, `echo $PACKAGE_VERSION | sed 's/.*\.\(.*\)\..*/\1/g'`)
+AC_SUBST(OKPERS_VERSION_PATCH, `echo $PACKAGE_VERSION | sed 's/.*\..*\.\(.*\)/\1/g'`)
+AC_SUBST(OKPERS_VERSION_NUMBER, `printf "0x%02x%02x%02x" $OKPERS_VERSION_MAJOR $OKPERS_VERSION_MINOR $OKPERS_VERSION_PATCH`)
 
 AC_CONFIG_FILES([
   Makefile
-  ykpers-1.pc
-  ykpers-version.h
-  ykcore/Makefile
+  okpers-1.pc
+  okpers-version.h
+  okcore/Makefile
   tests/Makefile
 ])
 AC_OUTPUT
 
 AC_MSG_NOTICE([summary of build options:
 
-  version:           ${VERSION} shared $LT_CURRENT:$LT_REVISION:$LT_AGE major $YKPERS_VERSION_MAJOR minor $YKPERS_VERSION_MINOR patch $YKPERS_VERSION_PATCH number $YKPERS_VERSION_NUMBER
+  version:           ${VERSION} shared $LT_CURRENT:$LT_REVISION:$LT_AGE major $OKPERS_VERSION_MAJOR minor $OKPERS_VERSION_MINOR patch $OKPERS_VERSION_PATCH number $OKPERS_VERSION_NUMBER
   Host type:         ${host}
   Install prefix:    ${prefix}
   Compiler:          ${CC}

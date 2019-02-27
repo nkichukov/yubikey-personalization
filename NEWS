@@ -26,9 +26,9 @@ Yubikey-personalize NEWS -- History of user-visible changes.     -*- outline -*-
 
 * Version 1.19.0 (released 2018-04-24)
 
-** Add yk_write_device_info().
+** Add ok_write_device_info().
 
-** Add ykpersonalize cli switch -D for device info.
+** Add okpersonalize cli switch -D for device info.
 
 ** Add code for handling personalization interface of major version 5.
 
@@ -40,13 +40,13 @@ Yubikey-personalize NEWS -- History of user-visible changes.     -*- outline -*-
 
 ** Documentation fixes.
 
-** Fix for ykinfo modhex serial output when it ends with c.
+** Fix for okinfo modhex serial output when it ends with c.
 
 ** Treat all firmware versions as supported.
 
 * Version 1.18.0 (released 2017-01-27)
 
-** Let ykchalresp read challenge from a file.
+** Let okchalresp read challenge from a file.
 
 ** Add support of working with a numbered key when many connected
 Thanks to Thomas Habets <habets@google.com>
@@ -69,7 +69,7 @@ Thanks to Thomas Habets <habets@google.com>
 
 * Version 1.17.2 (released 2015-09-22)
 
-** Let _yk_write() return an error if yk_wait_for_key_status() fails.
+** Let _ok_write() return an error if ok_wait_for_key_status() fails.
 
 ** Fix a mistake in help, fixed is up to 16 bytes, 32 characters.
 
@@ -81,9 +81,9 @@ Thanks to Thomas Habets <habets@google.com>
 
 * Version 1.17.0 (released 2015-04-01)
 
-** add yk_get_capabilities() to fetch capabilities.
+** add ok_get_capabilities() to fetch capabilities.
 
-** add -c to ykinfo to fetch capabilities.
+** add -c to okinfo to fetch capabilities.
 
 ** whitelist firmware 4.1.x
 
@@ -99,7 +99,7 @@ Thanks to Thomas Habets <habets@google.com>
 
 * Version 1.16.2 (released 2014-11-28)
 
-** ykinfo: fix modhex printout when serial is an odd number of hex digits.
+** okinfo: fix modhex printout when serial is an odd number of hex digits.
 
 ** whitelist yubikey version 4.0.x
 
@@ -116,9 +116,9 @@ For libusb-1.0
 
 * Version 1.16.0 (released 2014-09-26)
 
-** Add yk_get_key_vid_pid() to get the vendor and product id of a key.
+** Add ok_get_key_vid_pid() to get the vendor and product id of a key.
 
-** Add flags for ykinfo to print vendor and product id.
+** Add flags for okinfo to print vendor and product id.
 
 ** Fix a bug in the osx backend where it would return an error opening
 a composite device with two hid interfaces.
@@ -141,10 +141,10 @@ a composite device with two hid interfaces.
 
 * Version 1.15.1 (released 2014-03-12)
 
-** Add -6 and -8 flags to ykchalresp to output the response as a truncated
+** Add -6 and -8 flags to okchalresp to output the response as a truncated
 OATH code. Thanks to joernchen of Phenoelit <joernchen@phenoelit.de>
 
-** Add -t to ykchalresp to use current time / 30 as challenge in TOTP
+** Add -t to okchalresp to use current time / 30 as challenge in TOTP
 fashion. Thanks to joernchen of Phenoelit <joernchen@phenoelit.de>
 
 ** Fix for a crash in the libusb-0.1 backend.
@@ -154,19 +154,19 @@ Thanks to Antti Keränen <detegr@gmail.com>
 
 ** add new Neo version 3.2 as supported.
 
-** let ykp_AES_key_from_password() return error if it can't get a random
+** let okp_AES_key_from_password() return error if it can't get a random
 salt.
 
 ** let -a without option mean ask for raw key on STDIN.
 
 ** let no -a given mean generate a random key
 
-** add ykp_AES_key_from_raw() and ykp_HMAC_key_from_raw() that sets the
+** add okp_AES_key_from_raw() and okp_HMAC_key_from_raw() that sets the
 key from a byte array.
 
 ** remove -osalt= and possibility to generate key from password.
 
-** add YK_ENODATA that's returned when no data is returned from
+** add OK_ENODATA that's returned when no data is returned from
 the device and no other underlying error is set.
 
 * Version 1.14.2 (released 2013-12-30)
@@ -191,27 +191,27 @@ not be processed.
 Add targetConfig to show in which slot a configuration is intended.
 Possible memory leaks on error conditions.
 
-** Add -d switch to ykpersonalize for dry-run.
+** Add -d switch to okpersonalize for dry-run.
 
-** Add ykp_clear_config() for clearing configuration flags.
+** Add okp_clear_config() for clearing configuration flags.
 
 ** Add getter functions for all configuration flags.
 
 ** Add -V to all tools to output version.
 
-** Add ykp_get_acccode_type() and ykp_set_acccode_type()
+** Add okp_get_acccode_type() and okp_set_acccode_type()
 Only to do with export, showing where the access code came from
 in the ycfg.
 
-** Add -1 and -2 options to ykinfo to show programming state.
+** Add -1 and -2 options to okinfo to show programming state.
 
 * Version 1.13.0 (released 2013-04-22)
 
 ** Added import/export of ycfg-json format.
 Invoke with -fjson to -s or -i
-Add exported functions ykp_export_config() and ykp_import_config()
+Add exported functions okp_export_config() and okp_import_config()
 
-** Fixup output of flags when using ykp_write_config()
+** Fixup output of flags when using okp_write_config()
 
 ** Add binary builds for mac.
 
@@ -235,11 +235,11 @@ data to the YubiKey NEO. Wrote prefix as 0x24 instead of 0x00.
 
 ** Don't allow opening a YubiKey if there's more than one present in the system.
 
-** Fix shared linking of ykinfo and ykchalresp.
+** Fix shared linking of okinfo and okchalresp.
 
 * Version 1.11.1 (released 2012-12-21)
 
-** Implement ykusb_strerror() on windows.
+** Implement okusb_strerror() on windows.
 
 ** Fix a bug where a YubiKey would fail to be recognized if there was
 another device from Yubico (vendor id 1050) inserted and looked at
@@ -253,10 +253,10 @@ the command line tool, now all 16 bytes can be set.
 * Version 1.11.0 (released 2012-12-12)
 
 ** Added version symbols and functions.
-The header file is "ykpers-version.h" and it contains the following
-symbols and functions: YKPERS_VERSION_STRING, YKPERS_VERSION_NUMBER,
-YKPERS_VERSION_MAJOR, YKPERS_VERSION_MINOR, YKPERS_VERSION_PATCH,
-ykpers_check_version.  Requested by Giampaolo Bellini
+The header file is "okpers-version.h" and it contains the following
+symbols and functions: OKPERS_VERSION_STRING, OKPERS_VERSION_NUMBER,
+OKPERS_VERSION_MAJOR, OKPERS_VERSION_MINOR, OKPERS_VERSION_PATCH,
+okpers_check_version.  Requested by Giampaolo Bellini
 <iw2lsi@gmail.com>.
 
 * Version 1.10.0 (released 2012-12-11)
@@ -267,30 +267,30 @@ Has ProducId 0x110, 0x111 or 0x112 depending on mode (see the notes about
 
 ** Add support for SLOT_NDEF2.
 Use SLOT_NDEF to emit slot 1 as NDEF or SLOT_NDEF2 to emit slot 2.
-This also adds the function yk_write_ndef2() that takes a slot parameter.
+This also adds the function ok_write_ndef2() that takes a slot parameter.
 
-** Add -m flag for ykpersonalize, set usb mode of YubiKey NEO.
+** Add -m flag for okpersonalize, set usb mode of YubiKey NEO.
 0 means pure YubiKey mode, 1 means pure CCID mode and 2 means YubiKey/CCID
 composite mode. Add 80 to set EJECT_FLAG.
 To use this with the api, see the functions:
-ykp_alloc_device_config(), ykp_free_device_config(), ykp_set_device_mode(),
-ykp_set_device_chalresp_timeout(), ykp_set_device_autoeject_time() and
-yk_write_device_config().
+okp_alloc_device_config(), okp_free_device_config(), okp_set_device_mode(),
+okp_set_device_chalresp_timeout(), okp_set_device_autoeject_time() and
+ok_write_device_config().
 
-** Add -S flag for ykpersonalize, set the scanmap of the YubiKey NEO.
+** Add -S flag for okpersonalize, set the scanmap of the YubiKey NEO.
 Take an 90 character string describing 45 scancodes. See man page for more
-info. To use this with the api see yk_write_scan_map().
+info. To use this with the api see ok_write_scan_map().
 
-** In the api add ykp_ndef_as_text() to export the text from a YK_NDEF structure.
+** In the api add okp_ndef_as_text() to export the text from a OK_NDEF structure.
 
 ** Higher timeout for configuration writes as in particular swap can take
 longer than 600 ms.
 
 * Version 1.9.0 (released 2012-11-08)
 
-** ykinfo: New tool to print information about YubiKey.
+** okinfo: New tool to print information about YubiKey.
 
-** ykpersonalize: Add -z flag to zap configuration on YubiKey.
+** okpersonalize: Add -z flag to zap configuration on YubiKey.
 
 ** Fix PBKDF2 implementation.
 
@@ -309,7 +309,7 @@ better errors.
 greater than 188. Autodetects from configure which to use. Thanks to
 Maxim Burgerhout <maxim@wzzrd.com>.
 
-** Add new binary ykinfo, can be used to get serial number, version and
+** Add new binary okinfo, can be used to get serial number, version and
 touch level from a YubiKey.
 
 * Version 1.8.0 (released 2012-09-28)
@@ -319,13 +319,13 @@ touch level from a YubiKey.
 ** Added Continuous integration at travis-ci
 (http://travis-ci.org/#!/Yubico/yubikey-personalization)
 
-** Added yk_challenge_response() function for doing challenge response
+** Added ok_challenge_response() function for doing challenge response
 with a key.
 
 ** Fixed functions for NDEF writing, adding:
-ykp_ndef_alloc(), ykp_ndef_free() and ykp_set_ndef_access_code()
-also providing compatible name YK_NDEF in ykcore.h and exporting
-yk_write_ndef() there.
+okp_ndef_alloc(), okp_ndef_free() and okp_set_ndef_access_code()
+also providing compatible name OK_NDEF in okcore.h and exporting
+ok_write_ndef() there.
 Change return values from ndef_construct_*() functions to make them
 consistent with the rest of the library.
 
@@ -349,17 +349,17 @@ USE_NUMERIC_KEYPAD flag for sending the OATH OTP using keypad scan codes instead
 FAST_TRIG flag for faster triggering of slot one if slot two is empty
 
 ** Change the library around some to make the 2.3 features available.
-Use ykp_alloc() instead of ykp_create_config().
-Use ykp_configure_version() instead of ykp_configure_for() to set the version.
-Use ykp_configure_command() instead of ykp_configure_for() to set slot.
-Use yk_write_command() instead of yk_write_config().
+Use okp_alloc() instead of okp_create_config().
+Use okp_configure_version() instead of okp_configure_for() to set the version.
+Use okp_configure_command() instead of okp_configure_for() to set slot.
+Use ok_write_command() instead of ok_write_config().
 
 The new commands doesn't set any default configuration at all.
 
 ** Add library support for the YubiKey NEO beta
-ykp_construct_ndef_uri() for preparing a URI to write.
-ykp_construct_ndef_text() for preparing a text to write.
-yk_write_ndef() to write the constructed NDEF.
+okp_construct_ndef_uri() for preparing a URI to write.
+okp_construct_ndef_text() for preparing a text to write.
+ok_write_ndef() to write the constructed NDEF.
 
 ** Add support for the YubiKey NEO beta
 Writing NDEF URI with -n http://example.com/foo/
@@ -394,7 +394,7 @@ Doug Huff <mith@jrbobdobbs.org>.
 ** Header files are now usable from C++.
 Reported by Giampaolo Bellini.
 
-** ykchalresp incorrectly rejected some newer firmwares.
+** okchalresp incorrectly rejected some newer firmwares.
 Reported by Giampaolo Bellini.
 
 * Version 1.6.1 (released 2011-08-15)
@@ -406,11 +406,11 @@ The problem was due to mixing PIC and non-PIC object code.
 
 ** Accept firmware version 2.3.x too.
 
-** ykpersonalize: New parameter -oath-imf for OATH Initial Moving Factor.
+** okpersonalize: New parameter -oath-imf for OATH Initial Moving Factor.
 Contributed by Frank Cusack <frank@google.com>.
 
-** libykpers: New apis for setting/getting OATH Initial Moving Factor.
-The APIs are ykp_set_oath_imf and ykp_get_oath_imf.
+** libokpers: New apis for setting/getting OATH Initial Moving Factor.
+The APIs are okp_set_oath_imf and okp_get_oath_imf.
 
 * Version 1.5.2 (released 2011-05-10)
 
@@ -418,7 +418,7 @@ The APIs are ykp_set_oath_imf and ykp_get_oath_imf.
 Use --with-udevrulesdir=/lib/udev/rules.d or similar.  Contributed by
 Tollef Fog Heen.
 
-** Improve and distribute ykpers4win.mk.
+** Improve and distribute okpers4win.mk.
 
 ** Cleanup native Windows backend code.
 
@@ -432,7 +432,7 @@ Tollef Fog Heen.
 It is used automatically when building with a Mingw compiler, but you
 use --with-backend=windows to request it.
 
-** Distribute ykdef.h needed by challenge-response applications.
+** Distribute okdef.h needed by challenge-response applications.
 
 ** Bugfixes :
 
@@ -446,20 +446,20 @@ for OATH-HOTP.
 *** Configuring slot 2 was broken on Windows.
 
 * Version 1.5.0 (released 2011-03-09)
-** An additional binary (ykchalresp) to perform challenge-response was added.
+** An additional binary (okchalresp) to perform challenge-response was added.
 
 ** When generating keys from passphrase, generate 160 bit keys for modes
 that support it (OATH-HOTP and HMAC challenge response).
 
 ** OATH-HOTP usability improvements.
 
-** Serial number of YubiKey (2.2+) is shown with `ykpersonalize -v'.
+** Serial number of YubiKey (2.2+) is shown with `okpersonalize -v'.
 
 ** Make `configure' detect FreeBSD 8 libusb implementation.
 
 * Version 1.4.1 (released 2011-01-19)
-** Restore OATH-HOTP symbols for LIBYKPERS_1.0.
-Accidentally moved to LIBYKPERS_1.4 in 1.4.0.
+** Restore OATH-HOTP symbols for LIBOKPERS_1.0.
+Accidentally moved to LIBOKPERS_1.4 in 1.4.0.
 
 * Version 1.4.0 (released 2011-01-17)
 ** Add support for new features in YubiKey 2.2.
@@ -511,11 +511,11 @@ See contrib/README for more information.
 
 * Version 1.3 (released 2010-01-30)
 
-** libykpers-1: Give warning on unknown firmwares, but don't stop
+** libokpers-1: Give warning on unknown firmwares, but don't stop
 
 ** OATH-HOTP support
 
-ykpersonalize now supports the OATH-HOTP flags.
+okpersonalize now supports the OATH-HOTP flags.
 
 ** Updated documentation
 
@@ -524,7 +524,7 @@ and OATH-HOTP documentation has been added.
 
 * Version 1.2 (released 2010-01-22)
 
-** libykpers-1: Whitelist firmware version 2.1 too.
+** libokpers-1: Whitelist firmware version 2.1 too.
 
 * Version 1.1 (released 2009-10-03)
 
@@ -546,27 +546,27 @@ returning a 'void' value is treated as true or false).
 
 * Version 0.99 (released 2009-09-12)
 
-** libykpers: Fix build error related to _ykp_errno_location on non-Linux.
+** libokpers: Fix build error related to _okp_errno_location on non-Linux.
 Reported by Patrick Neave <p.neave@gmail.com>.
 
 * Version 0.98 (released 2009-09-08)
 
-** ykpersonalize: Exit with non-0 return code when yubikey is not present.
+** okpersonalize: Exit with non-0 return code when yubikey is not present.
 Reported by Greg Woods <woods@ucar.edu>.
 
-** ykpersonalize.1: Keep in sync with tool.
+** okpersonalize.1: Keep in sync with tool.
 By Tollef Fog Heen <tfheen@err.no>.
 
 * Version 0.97 (released 2009-09-03)
 
-** libykpers-1: Add linker version script.
+** libokpers-1: Add linker version script.
 If linker scripts are not supported, fall back on Libtool
 -export-symbols-regex.  Suggested by Tollef Fog Heen <tfheen@err.no>.
 
-** ykpersonalize: Make -h work even if there is no yubikey present.
+** okpersonalize: Make -h work even if there is no yubikey present.
 Suggested by Peter Hultqvist <peter.h@nsf.scout.se>.
 
-** ykpersonalize.1: Link to reference manual for explanation of options.
+** okpersonalize.1: Link to reference manual for explanation of options.
 Suggested by Peter Hultqvist <peter.h@nsf.scout.se>.
 
 ** Now requires libyubikey v1.5 or later.
@@ -578,23 +578,23 @@ It's still possible to give modhex numbers by preceding them with
 `m:'.
 
 ** Make it possible to program the second configuration.
-Added the two flags -1 and -2 to ykpersonalize.  This is to support
+Added the two flags -1 and -2 to okpersonalize.  This is to support
 the YubiKey II.
 
-** Have ykpersonalize show the new configuration and prompt.
+** Have okpersonalize show the new configuration and prompt.
 This makes it possible for the user to prevent incorrect configurations.
 
-** Rename installed library to "libykpers-1" and place
-** installed header files in sub-directory ykpers-1/.
+** Rename installed library to "libokpers-1" and place
+** installed header files in sub-directory okpers-1/.
 From now on we promise to retain API and ABI under this name forever.
-The shared library will be installed as /usr/lib/libykpers-1.so and
-the header files into /usr/include/ykpers-1/.  If there is ever an
+The shared library will be installed as /usr/lib/libokpers-1.so and
+the header files into /usr/include/okpers-1/.  If there is ever an
 incompatible API or ABI change in the future, it will be released as a
-a new library libykpers-2 with header files in ykpers-2/.
+a new library libokpers-2 with header files in okpers-2/.
 
-** Add pkg-config script "ykpers-1".
+** Add pkg-config script "okpers-1".
 To learn which flags to build the applications that uses the library,
-use "pkg-config --cflags --libs ykpers-1".
+use "pkg-config --cflags --libs okpers-1".
 
 * Version 0.95 (released 2009-08-17)
 
@@ -606,7 +606,7 @@ Includes modification of help (-h) text and manual.
 ** Improve error handling for libusb-1.0 backend.
 Thanks to Tollef Fog Heen.
 
-** Added man page for ykpersonalize.
+** Added man page for okpersonalize.
 Thanks to Tollef Fog Heen.
 
 * Version 0.93 (released 2009-08-07)

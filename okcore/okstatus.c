@@ -1,6 +1,7 @@
 /* -*- mode:C; c-file-style: "bsd" -*- */
 /*
- * Copyright (c) 2009-2015 Yubico AB
+ * Written by Richard Levitte <richard@levitte.org>
+ * Copyright (c) 2008-2012 Yubico AB
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,48 +29,62 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <okpers.h>
-#include <okpers-version.h>
-#include <stdio.h>
-#include <string.h>
+#include "okcore_lcl.h"
+#include "okdef.h"
+#include "okstatus.h"
 
-int main (void)
+OK_STATUS *okds_alloc(void)
 {
-	OKP_CONFIG *okp;
-	int rc;
-
-	if (strcmp (OKPERS_VERSION_STRING, okpers_check_version (NULL)) != 0)
-	{
-		printf ("version mismatch %s != %s\n",OKPERS_VERSION_STRING,
-			okpers_check_version (NULL));
-		return 1;
+	OK_STATUS *st = malloc(sizeof(OK_STATUS));
+	if (!st) {
+		ok_errno = OK_ENOMEM;
 	}
+	return st;
+}
 
-	if (okpers_check_version (OKPERS_VERSION_STRING) == NULL)
-	{
-		printf ("version NULL?\n");
-		return 1;
-	}
+void okds_free(OK_STATUS *st)
+{
+	free(st);
+}
 
-	if (okpers_check_version ("99.99.99") != NULL)
-	{
-		printf ("version not NULL?\n");
-		return 1;
-	}
+OK_STATUS *okds_static(void)
+{
+	static OK_STATUS st;
+	return &st;
+}
 
-	okp = okp_alloc ();
-	if (!okp)
-	{
-		printf ("okp_alloc returned NULL\n");
-		return 1;
-	}
-
-	rc = okp_free_config(okp);
-	if (!rc)
-	{
-		printf ("okp_free_config => %d\n", rc);
-		return 1;
-	}
-
+extern int okds_version_major(const OK_STATUS *st)
+{
+	if (st)
+		return st->versionMajor;
+	ok_errno = OK_ENOSTATUS;
+	return 0;
+}
+extern int okds_version_minor(const OK_STATUS *st)
+{
+	if (st)
+		return st->versionMinor;
+	ok_errno = OK_ENOSTATUS;
+	return 0;
+}
+extern int okds_version_build(const OK_STATUS *st)
+{
+	if (st)
+		return st->versionBuild;
+	ok_errno = OK_ENOSTATUS;
+	return 0;
+}
+extern int okds_pgm_seq(const OK_STATUS *st)
+{
+	if (st)
+		return st->pgmSeq;
+	ok_errno = OK_ENOSTATUS;
+	return 0;
+}
+extern int okds_touch_level(const OK_STATUS *st)
+{
+	if (st)
+		return st->touchLevel;
+	ok_errno = OK_ENOSTATUS;
 	return 0;
 }
