@@ -43,7 +43,7 @@
 #include <ykpers-version.h>
 
 const char *usage =
-	"Usage: ykchalresp [options] [challenge]\n"
+	"Usage: okchalresp [options] [challenge]\n"
 	"\n"
 	"Options :\n"
 	"\n"
@@ -52,7 +52,7 @@ const char *usage =
 	"\t-2        Send challenge to slot 2.\n"
 	"\t-H        Send a 64 byte HMAC challenge. This is the default.\n"
 	"\t-Y        Send a 6 byte Yubico challenge.\n"
-	"\t-N        Abort if Yubikey requires button press.\n"
+	"\t-N        Abort if key requires button press.\n"
 	"\t-x        Challenge is hex encoded.\n"
 	"\t-t        Time based challenge (for TOTP)\n"
 	"\t-6        Output 6 digit HOTP/TOTP code\n"
@@ -74,7 +74,7 @@ static void report_yk_error(void)
 			fprintf(stderr, "USB error: %s\n",
 				yk_usb_strerror());
 		} else {
-			fprintf(stderr, "Yubikey core error: %s\n",
+			fprintf(stderr, "Key core error: %s\n",
 				yk_strerror(yk_errno));
 		}
 	}
@@ -232,7 +232,7 @@ static int check_firmware(YK_KEY *yk, bool verbose)
 	if (ykds_version_major(st) < 2 ||
 	    (ykds_version_major(st) == 2
 	     && ykds_version_minor(st) < 2)) {
-		fprintf(stderr, "Challenge-response not supported before YubiKey 2.2.\n");
+		fprintf(stderr, "Challenge-response not supported.\n");
 		ykds_free(st);
 		return 0;
 	}
