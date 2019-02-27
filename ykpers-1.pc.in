@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: Libykpers
-Description: Personalization library for the YubiKey
-URL: http://www.yubico.com/
+Name: Libokpers
+Description: Community fork of personalization library for the YubiKey adding support for OnlyKey
+URL: https://github.com/trustcrypto/yubikey-personalization
 Version: @VERSION@
-Libs: -L${libdir} -lykpers-1 @PTHREAD_LIBS@
-Cflags: -I${includedir}/ykpers-1 @PTHREAD_CFLAGS@
+Libs: -L${libdir} -lokpers-1 @PTHREAD_LIBS@
+Cflags: -I${includedir}/okpers-1 @PTHREAD_CFLAGS@
