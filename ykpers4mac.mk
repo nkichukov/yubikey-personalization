@@ -30,7 +30,7 @@
 LIBYUBIKEYVERSION=1.13
 LIBJSONVERSION=0.11
 PROJECT=yubikey-personalization
-PACKAGE=ykpers
+PACKAGE=okpers
 CFLAGS="-mmacosx-version-min=10.6 -arch i386 -arch x86_64"
 
 all: usage ykpers4mac
@@ -64,10 +64,10 @@ ykpers4mac:
 	make install $(CHECK) && \
 	cp COPYING $(PWD)/tmp/root/licenses/libyubikey.txt && \
 	cd .. && \
-	cp ../ykpers-$(VERSION).tar.gz . \
-		|| curl -L -O https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/ykpers-$(VERSION).tar.gz && \
-	tar xfz ykpers-$(VERSION).tar.gz && \
-	cd ykpers-$(VERSION)/ && \
+	cp ../okpers-$(VERSION).tar.gz . \
+		|| curl -L -O https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/okpers-$(VERSION).tar.gz && \
+	tar xfz okpers-$(VERSION).tar.gz && \
+	cd okpers-$(VERSION)/ && \
 	CFLAGS=$(CFLAGS) PKG_CONFIG_PATH=$(PWD)/tmp/root/lib/pkgconfig ./configure --prefix=$(PWD)/tmp/root --with-libyubikey-prefix=$(PWD)/tmp/root && \
 	make install $(CHECK) && \
 	install_name_tool -id @executable_path/../lib/libjson-c.2.dylib $(PWD)/tmp/root/lib/libjson-c.2.dylib && \
@@ -78,15 +78,15 @@ ykpers4mac:
 	install_name_tool -change $(PWD)/tmp/root/lib/libjson-c.2.dylib @executable_path/../lib/libjson-c.2.dylib $(PWD)/tmp/root/lib/libjson.dylib && \
 	install_name_tool -id @executable_path/../lib/libyubikey.0.dylib $(PWD)/tmp/root/lib/libyubikey.dylib && \
 	install_name_tool -id @executable_path/../lib/libyubikey.0.dylib $(PWD)/tmp/root/lib/libyubikey.0.dylib && \
-	install_name_tool -id @executable_path/../lib/libykpers-1.1.dylib $(PWD)/tmp/root/lib/libykpers-1.dylib && \
-	install_name_tool -id @executable_path/../lib/libykpers-1.1.dylib $(PWD)/tmp/root/lib/libykpers-1.1.dylib && \
-	install_name_tool -change $(PWD)/tmp/root/lib/libjson-c.2.dylib @executable_path/../lib/libjson-c.2.dylib $(PWD)/tmp/root/lib/libykpers-1.1.dylib && \
-	install_name_tool -change $(PWD)/tmp/root/lib/libjson-c.2.dylib @executable_path/../lib/libjson-c.2.dylib $(PWD)/tmp/root/lib/libykpers-1.dylib && \
-	install_name_tool -change $(PWD)/tmp/root/lib/libyubikey.0.dylib @executable_path/../lib/libyubikey.0.dylib $(PWD)/tmp/root/lib/libykpers-1.dylib && \
-	install_name_tool -change $(PWD)/tmp/root/lib/libyubikey.0.dylib @executable_path/../lib/libyubikey.0.dylib $(PWD)/tmp/root/lib/libykpers-1.1.dylib && \
+	install_name_tool -id @executable_path/../lib/libokpers-1.1.dylib $(PWD)/tmp/root/lib/libokpers-1.dylib && \
+	install_name_tool -id @executable_path/../lib/libokpers-1.1.dylib $(PWD)/tmp/root/lib/libokpers-1.1.dylib && \
+	install_name_tool -change $(PWD)/tmp/root/lib/libjson-c.2.dylib @executable_path/../lib/libjson-c.2.dylib $(PWD)/tmp/root/lib/libokpers-1.1.dylib && \
+	install_name_tool -change $(PWD)/tmp/root/lib/libjson-c.2.dylib @executable_path/../lib/libjson-c.2.dylib $(PWD)/tmp/root/lib/libokpers-1.dylib && \
+	install_name_tool -change $(PWD)/tmp/root/lib/libyubikey.0.dylib @executable_path/../lib/libyubikey.0.dylib $(PWD)/tmp/root/lib/libokpers-1.dylib && \
+	install_name_tool -change $(PWD)/tmp/root/lib/libyubikey.0.dylib @executable_path/../lib/libyubikey.0.dylib $(PWD)/tmp/root/lib/libokpers-1.1.dylib && \
 	for executable in $(PWD)/tmp/root/bin/*; do \
 	install_name_tool -change $(PWD)/tmp/root/lib/libyubikey.0.dylib @executable_path/../lib/libyubikey.0.dylib $$executable && \
-	install_name_tool -change $(PWD)/tmp/root/lib/libykpers-1.1.dylib @executable_path/../lib/libykpers-1.1.dylib $$executable && \
+	install_name_tool -change $(PWD)/tmp/root/lib/libokpers-1.1.dylib @executable_path/../lib/libokpers-1.1.dylib $$executable && \
 	install_name_tool -change $(PWD)/tmp/root/lib/libjson-c.2.dylib @executable_path/../lib/libjson-c.2.dylib $$executable ; \
 	done && \
 	if otool -L $(PWD)/tmp/root/lib/*.dylib $(PWD)/tmp/root/bin/* | grep '$(PWD)/tmp/root' | grep -q compatibility; then \
@@ -98,7 +98,7 @@ ykpers4mac:
 	cp COPYING $(PWD)/tmp/root/licenses/yubikey-personalization.txt && \
 	cd .. && \
 	cd root && \
-	zip -r ../../ykpers-$(VERSION)-mac.zip *
+	zip -r ../../okpers-$(VERSION)-mac.zip *
 
 upload-ykpers4mac:
 	@if test ! -d $(YUBICO_GITHUB_REPO); then \

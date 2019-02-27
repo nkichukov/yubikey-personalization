@@ -29,7 +29,7 @@
 LIBYUBIKEYVERSION=1.13
 LIBJSONVERSION=0.13.1
 PROJECT=yubikey-personalization
-PACKAGE=ykpers
+PACKAGE=okpers
 
 all: usage ykpers4win32 ykpers4win64
 
@@ -62,10 +62,10 @@ ykpers4win:
 	make install $(CHECK) && \
 	cp COPYING $(PWD)/tmp/root/licenses/libyubikey.txt && \
 	cd .. && \
-	cp ../ykpers-$(VERSION).tar.gz . \
-		|| wget https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/ykpers-$(VERSION).tar.gz && \
-	tar xfa ykpers-$(VERSION).tar.gz && \
-	cd ykpers-$(VERSION)/ && \
+	cp ../okpers-$(VERSION).tar.gz . \
+		|| wget https://github.com/trustcrypto/yubikey-personalization/releases/download/v$(VERSION)/okpers-$(VERSION).tar.gz && \
+	tar xfa okpers-$(VERSION).tar.gz && \
+	cd okpers-$(VERSION)/ && \
 	PKG_CONFIG_PATH=$(PWD)/tmp/root/lib/pkgconfig lt_cv_deplibs_check_method=pass_all ./configure --host=$(HOST) --build=x86_64-unknown-linux-gnu --prefix=$(PWD)/tmp/root LDFLAGS=-L$(PWD)/tmp/root/lib CPPFLAGS=-I$(PWD)/tmp/root/include && \
 	make install $(CHECK) && \
 	rm $(PWD)/tmp/root/lib/*.la && \
@@ -73,7 +73,7 @@ ykpers4win:
 	cp COPYING $(PWD)/tmp/root/licenses/yubikey-personalization.txt && \
 	cd .. && \
 	cd root && \
-	zip -r ../../ykpers-$(VERSION)-win$(ARCH).zip *
+	zip -r ../../okpers-$(VERSION)-win$(ARCH).zip *
 
 ykpers4win32:
 	$(MAKE) -f ykpers4win.mk ykpers4win ARCH=32 HOST=i686-w64-mingw32 CHECK=check

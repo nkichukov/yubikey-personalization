@@ -1,19 +1,19 @@
 # Written by Richard Levitte <richard@levitte.org> et al.
 # Copyright (c) 2008-2014 Yubico AB
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #     * Redistributions of source code must retain the above copyright
 #       notice, this list of conditions and the following disclaimer.
-# 
+#
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
 #       disclaimer in the documentation and/or other materials provided
 #       with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -69,7 +69,7 @@ pkgconfig_DATA = ykpers-1.pc
 if HAVE_LD_VERSION_SCRIPT
 libokpers_1_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libykpers-1.map
 else
-libokpers_1_la_LDFLAGS += -export-symbols-regex '^(ykp|yk|ykds|ykpers)_.*|_yk.*_errno_location'
+libokpers_1_la_LDFLAGS += -export-symbols-regex '^(ykp|yk|ykds|ykpers|okpers)_.*|_yk.*_errno_location'
 endif
 
 # The command line tools.
@@ -78,13 +78,13 @@ bin_PROGRAMS = okchalresp okinfo
 
 noinst_LTLIBRARIES += libokpers_args.la
 libokpers_args_la_SOURCES = ykpers-args.c ykpers-args.h
-libokpers_args_la_LIBADD = libykpers-1.la $(LTLIBYUBIKEY)
+libokpers_args_la_LIBADD = libokpers-1.la $(LTLIBYUBIKEY)
 
 okchalresp_SOURCES = ykchalresp.c
-okchalresp_LDADD = ./libykpers-1.la $(LTLIBYUBIKEY)
+okchalresp_LDADD = ./libokpers-1.la $(LTLIBYUBIKEY)
 
 okinfo_SOURCES = ykinfo.c
-okinfo_LDADD = ./libykpers-1.la $(LTLIBYUBIKEY)
+okinfo_LDADD = ./libokpers-1.la $(LTLIBYUBIKEY)
 
 # Windows rules.
 EXTRA_DIST = ykpers4win.mk ykpers4mac.mk
