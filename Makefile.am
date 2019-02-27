@@ -57,24 +57,24 @@ else
 libokpers_1_la_SOURCES += ykpers-nojson.c
 endif
 libokpers_1_la_SOURCES += ykpers_lcl.h ykpers-json.h ykpers_lcl.c
-libokpers_1_la_SOURCES += ykpers-1.pc.in libykpers-1.map
+libokpers_1_la_SOURCES += ykpers-1.pc.in libokpers-1.map
 libokpers_1_la_LIBADD = $(LTLIBYUBIKEY) ./ykcore/libykcore.la ./libhmac.la $(libjson_LIBS)
 libokpers_1_la_LDFLAGS = -no-undefined \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
-EXTRA_libokpers_1_la_DEPENDENCIES = libykpers-1.map
+EXTRA_libokpers_1_la_DEPENDENCIES = libokpers-1.map
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = ykpers-1.pc
 
 if HAVE_LD_VERSION_SCRIPT
-libokpers_1_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libykpers-1.map
+libokpers_1_la_LDFLAGS += -Wl,--version-script=$(srcdir)/libokpers-1.map
 else
 libokpers_1_la_LDFLAGS += -export-symbols-regex '^(ykp|yk|ykds|ykpers|okpers)_.*|_yk.*_errno_location'
 endif
 
 # The command line tools.
 
-bin_PROGRAMS = okchalresp okinfo
+bin_PROGRAMS = okchalresp
 
 noinst_LTLIBRARIES += libokpers_args.la
 libokpers_args_la_SOURCES = ykpers-args.c ykpers-args.h
@@ -83,20 +83,11 @@ libokpers_args_la_LIBADD = libokpers-1.la $(LTLIBYUBIKEY)
 okchalresp_SOURCES = ykchalresp.c
 okchalresp_LDADD = ./libokpers-1.la $(LTLIBYUBIKEY)
 
-okinfo_SOURCES = ykinfo.c
-okinfo_LDADD = ./libokpers-1.la $(LTLIBYUBIKEY)
-
 # Windows rules.
 EXTRA_DIST = ykpers4win.mk ykpers4mac.mk
 
-# Dist dev tools as well, to have the tarball complete.
-EXTRA_DIST += build-and-test.sh .travis.yml .gitignore
-
 # udev rule files
 EXTRA_DIST += 69-yubikey.rules 70-yubikey.rules 69-onlykey.rules 71-onlykey.rules
-
-# dist the man sources
-EXTRA_DIST += $(MANSOURCES)
 
 udevrulesdir=@udevrulesdir@
 dist_udevrules_DATA = \

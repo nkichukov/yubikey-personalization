@@ -1,19 +1,19 @@
 # Written by Simon Josefsson <simon@yubico.com>.
 # Copyright (c) 2008-2014 Yubico AB
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #     * Redistributions of source code must retain the above copyright
 #       notice, this list of conditions and the following disclaimer.
-# 
+#
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
 #       disclaimer in the documentation and/or other materials provided
 #       with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -26,7 +26,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-LIBYKPERS_1.0 {
+LIBOKPERS_1.0 {
   global:
 # Functions:
     yk_check_firmware_version;
@@ -95,7 +95,7 @@ LIBYKPERS_1.0 {
     *;
 };
 
-LIBYKPERS_1.4 {
+LIBOKPERS_1.4 {
   global:
 # Functions:
     ykp_HMAC_key_from_hex;
@@ -108,26 +108,26 @@ LIBYKPERS_1.4 {
     ykp_set_extflag_SERIAL_USB_VISIBLE;
     ykp_set_extflag_SERIAL_API_VISIBLE;
 # Variables:
-} LIBYKPERS_1.0;
+} LIBOKPERS_1.0;
 
-LIBYKPERS_1.5 {
+LIBOKPERS_1.5 {
   global:
 # Functions:
   yk_wait_for_key_status;
   yk_read_response_from_key;
   yk_get_serial;
 # Variables:
-} LIBYKPERS_1.4;
+} LIBOKPERS_1.4;
 
-LIBYKPERS_1.6 {
+LIBOKPERS_1.6 {
   global:
 # Functions:
   ykp_set_oath_imf;
   ykp_get_oath_imf;
 # Variables:
-} LIBYKPERS_1.5;
+} LIBOKPERS_1.5;
 
-LIBYKPERS_1.7 {
+LIBOKPERS_1.7 {
   global:
 # Functions:
   ykp_alloc;
@@ -143,9 +143,9 @@ LIBYKPERS_1.7 {
   ykp_construct_ndef_uri;
   ykp_construct_ndef_text;
 # Variables:
-} LIBYKPERS_1.6;
+} LIBOKPERS_1.6;
 
-LIBYKPERS_1.8 {
+LIBOKPERS_1.8 {
   global:
 # Functions:
   yk_challenge_response;
@@ -153,16 +153,16 @@ LIBYKPERS_1.8 {
   ykp_alloc_ndef;
   ykp_free_ndef;
 # Variables:
-} LIBYKPERS_1.7;
+} LIBOKPERS_1.7;
 
-LIBYKPERS_1.9 {
+LIBOKPERS_1.9 {
   global:
 # Functions:
   yk_hmac_sha1;
 # Variables:
-} LIBYKPERS_1.8;
+} LIBOKPERS_1.8;
 
-LIBYKPERS_1.10 {
+LIBOKPERS_1.10 {
   global:
 # Functions:
   yk_write_ndef2;
@@ -176,30 +176,30 @@ LIBYKPERS_1.10 {
   ykp_set_device_autoeject_time;
   yk_write_scan_map;
 # Variables:
-} LIBYKPERS_1.9;
+} LIBOKPERS_1.9;
 
-LIBYKPERS_1.11 {
+LIBOKPERS_1.11 {
   global:
   ykpers_check_version;
 # Variables:
-} LIBYKPERS_1.10;
+} LIBOKPERS_1.10;
 
-LIBYKPERS_1.12 {
+LIBOKPERS_1.12 {
   global:
 # Functions:
   ykp_set_extflag_LED_INV;
 # Variables:
-} LIBYKPERS_1.11;
+} LIBOKPERS_1.11;
 
-LIBYKPERS_1.13 {
+LIBOKPERS_1.13 {
   global:
 # Functions:
   ykp_export_config;
   ykp_import_config;
 # Variables:
-} LIBYKPERS_1.12;
+} LIBOKPERS_1.12;
 
-LIBYKPERS_1.14 {
+LIBOKPERS_1.14 {
   global:
 # Functions:
   ykp_get_cfgflag_ALLOW_HIDTRIG;
@@ -241,41 +241,41 @@ LIBYKPERS_1.14 {
   ykp_set_acccode_type;
   ykp_get_acccode_type;
 # Variables:
-} LIBYKPERS_1.13;
+} LIBOKPERS_1.13;
 
-LIBYKPERS_1.15 {
+LIBOKPERS_1.15 {
   global:
 # Functions:
   ykp_get_supported_key_length;
   ykp_AES_key_from_raw;
   ykp_HMAC_key_from_raw;
 # Variables:
-} LIBYKPERS_1.14;
+} LIBOKPERS_1.14;
 
-LIBYKPERS_1.16 {
+LIBOKPERS_1.16 {
   global:
 # Functions:
   yk_get_key_vid_pid;
 # Variables:
-} LIBYKPERS_1.15;
+} LIBOKPERS_1.15;
 
-LIBYKPERS_1.17 {
+LIBOKPERS_1.17 {
   global:
 # Functions:
   yk_get_capabilities;
 # Variables:
-} LIBYKPERS_1.16;
+} LIBOKPERS_1.16;
 
-LIBYKPERS_1.18 {
+LIBOKPERS_1.18 {
   global:
 # Functions:
   yk_open_key;
 # Variables:
-} LIBYKPERS_1.17;
+} LIBOKPERS_1.17;
 
-LIBYKPERS_1.19 {
+LIBOKPERS_1.19 {
   global:
 # Functions:
   yk_write_device_info;
 # Variables:
-} LIBYKPERS_1.18;
+} LIBOKPERS_1.18;
