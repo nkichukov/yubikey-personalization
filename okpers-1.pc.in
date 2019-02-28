@@ -4,8 +4,8 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: Libokpers
-Description: Personalization library for the YubiKey
-URL: http://www.yubico.com/
+Description: Community fork of YubiKey Personalization cross-platform library and tool for use with OnlyKey
+URL: https://github.com/trustcrypto/yubikey-personalization
 Version: @VERSION@
 Libs: -L${libdir} -lokpers-1 @PTHREAD_LIBS@
 Cflags: -I${includedir}/okpers-1 @PTHREAD_CFLAGS@
